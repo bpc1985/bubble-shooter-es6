@@ -1,5 +1,5 @@
 import Phaser from 'phaser'
-
+import Bubble from '../sprites/Bubble'
 export default class extends Phaser.Sprite {
 
   constructor ({ game, x, y, asset, rightBound, leftBound}) {
@@ -11,9 +11,12 @@ export default class extends Phaser.Sprite {
     //Maybe something more intelligent needed with these values, for example when we have a grid object we can give it or something.
     this.rightBound = rightBound;
     this.leftBound = leftBound;
-
     this.maxSpeed = 500;
-    
+    //Available bubble colors
+    this.bubbleColors = ['blue', 'red'];
+    //Shooting order and ready to shoot
+    this.bubbleOrder = ['blue','blue'];
+    this.readyToShoot = true;
   }
 
   update () {
@@ -40,6 +43,38 @@ export default class extends Phaser.Sprite {
           this.body.velocity.x = 0;
       }
 
+  }
+
+  shoot(){
+      if(this.readyToShoot === true && this.game.input.activePointer.position.y < this.body.top){
+              this.readyToShoot = false;
+              //Get the current position of mouse and subtract the current position of the ball, you'll have the direction for the shot.
+              //Normalization is needed to ensure that the speed is constant.
+              var shotVelocity = new Phaser.Point(0,0);
+              this.game.input.activePointer.position.copyTo(shotVelocity);
+              shotVelocity.subtract(this.body.center.x,this.body.center.y);
+              shotVelocity.normalize();
+              shotVelocity.setMagnitude(this.maxSpeed);
+              this.bubble = new Bubble({game: this.game,
+                x :this.body.center.x,
+                y: this.body.center.y,
+                asset: this.getBubbleAsset(),
+                rightBound: this.rightBound,
+                leftBound: this.leftBound-1,
+                ship:this});
+                this.bubble.body.velocity = shotVelocity;
+              
+      }
+  }
+
+  readyGun(){
+      this.readyToShoot = true;
+      this.bubbleOrder[0] = this.bubbleOrder[1];
+      this.bubbleOrder[1] = this.bubbleColors[Math.floor((Math.random() * 2))];
+  }
+
+  getBubbleAsset(){
+      return this.bubbleOrder[0] + 'bubble';
   }
 
 }
