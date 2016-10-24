@@ -33,11 +33,13 @@ export default class extends Phaser.State {
 
       });
       this.game.add.existing(this.ship);
-      this.board = new Board();
-      this.board.make
       
       this.bubblesOnGrid = [];
       this.makeGrid();
+
+      this.bubbleOrderUI = [];
+      this.makeBubbleOrderUI();
+
   }
   update (){
       //Move with A and D.
@@ -82,8 +84,8 @@ export default class extends Phaser.State {
   bubbleCollision(activeBubble,gridBubble){
       gridBubble.kill();
       activeBubble.kill();
-      this.ship.readyGun()
-
+      this.ship.readyGun();
+      this.updateBubbleOrderUI();
   }
 
   //Makes a grid of bubbles
@@ -107,6 +109,25 @@ export default class extends Phaser.State {
 
   }
 
-
+  makeBubbleOrderUI(){
+      var UIx = this.rightBound + this.bubbleRadius;
+      var UIy = this.bubbleRadius*4;
+      for (var i = 0; i<this.ship.bubbleOrder.length;i++){
+          this.bubbleOrderUI[i] = new Bubble({game: this.game,
+                x : UIx,
+                y: UIy+ this.bubbleRadius*1.5*i,
+                asset: this.ship.getBubbleAsset(i),
+                rightBound: this.rightBound,
+                leftBound: this.leftBound-1,
+                ship:this});
+                this.game.add.existing(this.bubbleOrderUI[i]);
+        }
+      }
+      
+    updateBubbleOrderUI(){
+        for (var i = 0; i<this.ship.bubbleOrder.length;i++){
+          this.bubbleOrderUI[i].loadTexture(this.ship.getBubbleAsset(i));
+        }
+    }
 
 }

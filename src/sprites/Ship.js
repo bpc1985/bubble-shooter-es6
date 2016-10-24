@@ -12,11 +12,13 @@ export default class extends Phaser.Sprite {
     this.rightBound = rightBound;
     this.leftBound = leftBound;
     this.maxSpeed = 500;
+    this.bubbleShootingSpeed = 700;
     //Available bubble colors
     this.bubbleColors = ['blue', 'red'];
     //Shooting order and ready to shoot
     this.bubbleOrder = ['blue','blue'];
     this.readyToShoot = true;
+    
   }
 
   update () {
@@ -54,11 +56,11 @@ export default class extends Phaser.Sprite {
               this.game.input.activePointer.position.copyTo(shotVelocity);
               shotVelocity.subtract(this.body.center.x,this.body.center.y);
               shotVelocity.normalize();
-              shotVelocity.setMagnitude(this.maxSpeed);
+              shotVelocity.setMagnitude(this.bubbleShootingSpeed);
               this.bubble = new Bubble({game: this.game,
                 x :this.body.center.x,
                 y: this.body.center.y,
-                asset: this.getBubbleAsset(),
+                asset: this.getBubbleAsset(0),
                 rightBound: this.rightBound,
                 leftBound: this.leftBound-1,
                 ship:this});
@@ -73,8 +75,8 @@ export default class extends Phaser.Sprite {
       this.bubbleOrder[1] = this.bubbleColors[Math.floor((Math.random() * 2))];
   }
 
-  getBubbleAsset(){
-      return this.bubbleOrder[0] + 'bubble';
+  getBubbleAsset(i){
+      return this.bubbleOrder[i] + 'bubble';
   }
 
 }
