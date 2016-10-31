@@ -1,8 +1,8 @@
 /* globals __DEV__ */
 import Phaser from 'phaser'
-import Mushroom from '../sprites/Mushroom'
 import Bubble from '../sprites/Bubble'
 import Ship from '../sprites/Ship'
+import Board from '../sprites/Board'
 import {setResponsiveWidth} from '../utils'
 
 export default class extends Phaser.State {
@@ -14,9 +14,9 @@ export default class extends Phaser.State {
       this.game.physics.startSystem(Phaser.Physics.ARCADE);
       this.bubbleRadius = 32;
       this.grid = {width: 20, height: 15};
-      this.leftBound = 50;
+      this.leftBound = 32;
       this.rightBound = this.leftBound + this.grid.width * this.bubbleRadius;
-
+      
       //DEBUG lines
       this.leftLine = new Phaser.Line(this.leftBound,0,this.leftBound,this.game.world.height);
       this.rightLine = new Phaser.Line(this.rightBound,0,this.rightBound,this.game.world.height);
@@ -28,17 +28,18 @@ export default class extends Phaser.State {
         x: this.leftBound +  (this.rightBound - this.leftBound)/2,
         y: this.game.world.height - 1.5* this.bubbleRadius,
         asset: 'redbubble',
-        rightBound:this.rightBound - this.bubbleRadius/2,
-        leftBound:this.leftBound + this.bubbleRadius/2
+        rightBound:this.rightBound ,
+        leftBound:this.leftBound
 
       });
       this.game.add.existing(this.ship);
-
-      this.bubble = null;
-      this.makeActiveBubble();
-
+      
       this.bubblesOnGrid = [];
       this.makeGrid();
+
+      this.bubbleOrderUI = [];
+      this.makeBubbleOrderUI();
+
   }
   update (){
       //Move with A and D.
@@ -57,12 +58,13 @@ export default class extends Phaser.State {
           this.ship.move('nowhere');
       }
       //Shooting the bubble
-      if(this.game.input.activePointer.leftButton.isDown && this.bubble != null){
-          this.bubble.shoot();
+      if(this.game.input.activePointer.leftButton.isDown){
+          this.ship.shoot();
+          this.game.add.existing(this.ship.bubble);
       }
 
       //Check collision between the bubble that is being shot and the bubbles on the grid
-      this.game.physics.arcade.overlap(this.bubble,this.bubblesOnGrid,this.bubbleCollision,null,this);
+      this.game.physics.arcade.overlap(this.ship.bubble,this.bubblesOnGrid,this.bubbleCollision,null,this);
 
 
   }
@@ -82,8 +84,8 @@ export default class extends Phaser.State {
   bubbleCollision(activeBubble,gridBubble){
       gridBubble.kill();
       activeBubble.kill();
-      this.makeActiveBubble();
-
+      this.ship.readyGun();
+      this.updateBubbleOrderUI();
   }
 
   //Makes a grid of bubbles
@@ -106,18 +108,26 @@ export default class extends Phaser.State {
 
 
   }
-  //Creates a shootable bubble in ships position
-  makeActiveBubble(){
-      this.bubble = new Bubble({game: this.game,
-        x :this.ship.body.x,
-        y: this.ship.body.y,
-        asset:'bluebubble',
-        rightBound: this.rightBound,
-        leftBound: this.leftBound,
-        ship:this.ship});
-      this.game.add.existing(this.bubble);
-  }
 
-
+  makeBubbleOrderUI(){
+      var UIx = this.rightBound + this.bubbleRadius;
+      var UIy = this.bubbleRadius*4;
+      for (var i = 0; i<this.ship.bubbleOrder.length;i++){
+          this.bubbleOrderUI[i] = new Bubble({game: this.game,
+                x : UIx,
+                y: UIy+ this.bubbleRadius*1.5*i,
+                asset: this.ship.getBubbleAsset(i),
+                rightBound: this.rightBound,
+                leftBound: this.leftBound-1,
+                ship:this});
+                this.game.add.existing(this.bubbleOrderUI[i]);
+        }
+      }
+      
+    updateBubbleOrderUI(){
+        for (var i = 0; i<this.ship.bubbleOrder.length;i++){
+          this.bubbleOrderUI[i].loadTexture(this.ship.getBubbleAsset(i));
+        }
+    }
 
 }
