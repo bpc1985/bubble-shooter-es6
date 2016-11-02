@@ -3,6 +3,7 @@ import Phaser from 'phaser';
 import Bubble from '../sprites/Bubble';
 import Ship from '../sprites/Ship';
 import Board from '../sprites/Board';
+import BubbleOrder from '../sprites/BubbleOrder';
 import {setResponsiveWidth} from '../utils';
 
 export default class extends Phaser.State {
@@ -37,8 +38,16 @@ export default class extends Phaser.State {
     this.bubblesOnGrid = [];
     this.makeGrid();
 
-    this.bubbleOrderUI = [];
-    this.makeBubbleOrderUI();
+
+
+    this.bubbleOrder = new BubbleOrder({
+      game: this.game,
+      x:this.rightBound + this.bubbleRadius,
+      y:this.bubbleRadius * 8,
+      asset:'bubbleorder',
+      ship:this.ship
+    });
+    this.game.add.existing(this.bubbleOrder);
   }
   update() {
     //Move with A and D.
@@ -83,7 +92,7 @@ export default class extends Phaser.State {
     gridBubble.kill();
     activeBubble.kill();
     this.ship.readyGun();
-    this.updateBubbleOrderUI();
+    this.bubbleOrder.updateOrder();
   }
 
   //Makes a grid of bubbles
@@ -106,26 +115,6 @@ export default class extends Phaser.State {
     }
   }
 
-  makeBubbleOrderUI(){
-    var UIx = this.rightBound + this.bubbleRadius;
-    var UIy = this.bubbleRadius * 4;
 
-    for (var i = 0; i < this.ship.bubbleOrder.length; i++) {
-      this.bubbleOrderUI[i] = new Bubble({
-        game: this.game,
-        x : UIx,
-        y: UIy+ this.bubbleRadius*1.5*i,
-        asset: this.ship.getBubbleAsset(i),
-        rightBound: this.rightBound,
-        leftBound: this.leftBound-1,
-        ship:this});
-        this.game.add.existing(this.bubbleOrderUI[i]);
-    }
-  }
 
-  updateBubbleOrderUI(){
-    for (var i = 0; i < this.ship.bubbleOrder.length; i++){
-      this.bubbleOrderUI[i].loadTexture(this.ship.getBubbleAsset(i));
-    }
-  }
 }

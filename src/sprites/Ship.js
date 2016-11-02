@@ -18,7 +18,7 @@ export default class extends Phaser.Sprite {
     //Available bubble colors
     this.bubbleColors = ['blue', 'red'];
     //Shooting order and ready to shoot
-    this.bubbleOrder = ['blue','blue'];
+    this.bubbleOrder = ['blue','red'];
     this.readyToShoot = true;
   }
 
