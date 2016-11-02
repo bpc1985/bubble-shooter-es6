@@ -14,7 +14,7 @@ export default class extends Phaser.Sprite {
     this.rightBound = rightBound;
     this.leftBound = leftBound;
     this.ship = ship;
-    this.maxSpeed = 700;
+
 
   }
 

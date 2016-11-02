@@ -72,7 +72,7 @@ export default class extends Phaser.Sprite {
   readyGun(){
       this.readyToShoot = true;
       this.bubbleOrder[0] = this.bubbleOrder[1];
-      this.bubbleOrder[1] = this.bubbleColors[Math.floor((Math.random() * 2))];
+      this.bubbleOrder[1] = this.bubbleColors[Math.floor((Math.random() * this.bubbleColors.length))];
   }
 
   getBubbleAsset(i){
