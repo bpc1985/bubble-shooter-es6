@@ -24,12 +24,14 @@ export default class Board {
             continue;
           }
 
-          var bubble = new Bubble({game: this.game,
-            x :this.leftBound + i*this.bubbleRadius + this.bubbleRadius/2,
-            y:400+j*this.bubbleRadius,
-            asset:'bluebubble',
+          var bubble = new Bubble({
+            game: this.game,
+            x: this.leftBound + i * this.bubbleRadius + this.bubbleRadius / 2,
+            y: 400 + j * this.bubbleRadius,
+            asset: 'bluebubble',
             rightBound: this.rightBound,
-            leftBound: this.leftBound});
+            leftBound: this.leftBound
+          });
 
           this.grid[row][col] = bubble;
         }
