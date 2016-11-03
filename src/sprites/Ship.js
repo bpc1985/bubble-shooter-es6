@@ -63,7 +63,8 @@ export default class extends Phaser.Sprite {
         asset: this.getBubbleAsset(0),
         rightBound: this.rightBound+1,
         leftBound: this.leftBound-1,
-        ship:this
+        ship:this,
+        color:this.getBubbleColor(0)
       });
       this.bubble.body.velocity = shotVelocity;
     }
@@ -77,6 +78,9 @@ export default class extends Phaser.Sprite {
 
   getBubbleAsset(i){
     return this.bubbleOrder[i] + 'bubble';
+  }
+  getBubbleColor(i){
+    return this.bubbleOrder[i];
   }
 
 }

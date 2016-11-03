@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 
 export default class extends Phaser.Sprite {
 
-  constructor ({ game, x, y, asset, rightBound, leftBound, ship}) {
+  constructor ({ game, x, y, asset, rightBound, leftBound, ship,color}) {
     super(game, x, y, asset);
 
     this.game = game;
@@ -13,6 +13,7 @@ export default class extends Phaser.Sprite {
     this.rightBound = rightBound;
     this.leftBound = leftBound;
     this.ship = ship;
+    this.color = color;
   }
 
   update () {

@@ -99,10 +99,10 @@ export default class extends Phaser.State {
 
   //Gets called when the bubble that is currently being shot hits one of the bubbles on the grid.
   bubbleCollision(activeBubble, gridBubble) {
-    //activeBubble.kill();
-    //gridBubble.kill();
-    this.ship.bubble = null;
-    this.bubbleGrid.snapToGrid(activeBubble.body.center.x,activeBubble.body.center.y,activeBubble);
+    activeBubble.kill();
+    gridBubble.kill();
+    //this.ship.bubble = null;
+    //this.bubbleGrid.snapToGrid(activeBubble.body.center.x,activeBubble.body.center.y,activeBubble);
     this.ship.readyGun();
     this.bubbleOrder.updateOrder();
   }

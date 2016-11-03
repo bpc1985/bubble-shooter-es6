@@ -74,7 +74,7 @@ export default class extends Phaser.Sprite {
             offset+=this.bubbleRadius/2;
         }
         for(var i = 0; i<row_length; i++){
-            if(j>startingBubbleY && i %2 ===0){
+            if(j>startingBubbleY){
                 this.grid[j][i] = new Bubble({
                 game:this.game,
                 x:this.leftBound+offset+i*this.bubbleRadius,
@@ -99,59 +99,23 @@ export default class extends Phaser.Sprite {
      return 0;
  }
 
- snapToGrid(x,y,bubble){
-     bubble.body.velocity.x=0;
-     bubble.body.velocity.y=0;
-     var trueY = Math.round((this.game.world.height-y)/this.bubbleRadius);
-     var offset = 0;
-     if(trueY %2 ===0){
-        offset =this.bubbleRadius/2;
-     }
-     var trueX = Math.round((x-offset-this.leftBound)/this.bubbleRadius);
-
-     if(this.grid[trueY][trueX] === null){
-        this.grid[trueY][trueX] = bubble;
-        bubble.body.x=this.leftBound+offset+trueX*this.bubbleRadius;
-        bubble.body.y=this.body.y-this.bubbleRadius*trueY;
-        this.collisionGroup.add(bubble);
-     }else{
-        
-        var currentCandidateX= trueX+ this.nearbyPositions[offset/(this.bubbleRadius/2)][0][1];
-        var currentCandidateY= trueY+ this.nearbyPositions[offset/(this.bubbleRadius/2)][0][0];
-
-         for(var i = 0; i<this.nearbyPositions[offset/(this.bubbleRadius/2)].length;i++){
-            var nearbyY = this.nearbyPositions[offset/(this.bubbleRadius/2)][i][0];
-            var nearbyX = this.nearbyPositions[offset/(this.bubbleRadius/2)][i][1];
-            if(this.grid[trueY+nearbyY][trueX+nearbyX] === null){
-                if(this.gridPosReal(trueX+nearbyX,trueY+nearbyY).distance(bubble.body.center)<this.gridPosReal(currentCandidateX,currentCandidateY).distance(bubble.body.center)){
-                    currentCandidateX = trueX+nearbyX;
-                    currentCandidateY = trueY+nearbyY;
-
-                }
-            }
-         }
-        this.grid[currentCandidateY][currentCandidateX] = bubble;
-        bubble.body.x=this.leftBound+offset+currentCandidateX*this.bubbleRadius;
-        bubble.body.y=this.body.y-this.bubbleRadius*currentCandidateY;
-        this.collisionGroup.add(bubble);
-
-
-     }
- }
- nearbyGridPositions(i,j){
-
+ addBubbleToGrid(i,j){
+    var offset = this.bubbleRadius/2;
+    if(length%2 === 1){
+        row_length-=1;
+        offset+=this.bubbleRadius/2;
+    }
+    this.grid[j][i] = new Bubble({
+        game:this.game,
+        x:this.leftBound+offset+i*this.bubbleRadius,
+        y:this.body.y-this.bubbleRadius*length-this.bubbleRadius/2,
+        asset:'bluebubble',
+        rightBound:this.rightBound,
+        leftBound:this.leftBound
+    });
+    this.game.add.existing(this.grid[length][i]);
+    this.collisionGroup.add(this.grid[length][i]);
  }
 
- gridPosReal(i,j){
-     var y = this.body.y-this.bubbleRadius*j+this.bubbleRadius/2;
-     var offset = 0;
-     if(j % 2 === 1){
-         offset = this.bubbleRadius/2;
-     }
-     var x = this.leftBound+offset+i*this.bubbleRadius+this.bubbleRadius/2;
 
-
-
-     return new Phaser.Point(x,y);
- }
 }
