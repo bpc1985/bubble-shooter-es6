@@ -14,7 +14,7 @@ export default class extends Phaser.Sprite {
     this.rightBound = rightBound;
     this.leftBound = leftBound;
     this.maxSpeed = 500;
-    this.bubbleShootingSpeed = 700;
+    this.bubbleShootingSpeed = 500;
     //Available bubble colors
     this.bubbleColors = ['blue', 'red'];
     //Shooting order and ready to shoot
@@ -61,7 +61,7 @@ export default class extends Phaser.Sprite {
         x :this.body.center.x,
         y: this.body.center.y,
         asset: this.getBubbleAsset(0),
-        rightBound: this.rightBound,
+        rightBound: this.rightBound+1,
         leftBound: this.leftBound-1,
         ship:this
       });

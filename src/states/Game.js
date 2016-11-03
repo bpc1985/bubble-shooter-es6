@@ -4,6 +4,7 @@ import Bubble from '../sprites/Bubble';
 import Ship from '../sprites/Ship';
 import Board from '../sprites/Board';
 import BubbleOrder from '../sprites/BubbleOrder';
+import Grid from '../sprites/Grid';
 import {setResponsiveWidth} from '../utils';
 
 export default class extends Phaser.State {
@@ -36,9 +37,7 @@ export default class extends Phaser.State {
     this.game.add.existing(this.ship);
 
     this.bubblesOnGrid = [];
-    this.makeGrid();
-
-
+    //dathis.makeGrid();
 
     this.bubbleOrder = new BubbleOrder({
       game: this.game,
@@ -48,6 +47,17 @@ export default class extends Phaser.State {
       ship:this.ship
     });
     this.game.add.existing(this.bubbleOrder);
+    this.bubbleGrid= new Grid({
+      game:this.game,
+      x:this.leftBound,
+      y:this.game.world.height,
+      asset:'redbubble',
+      leftBound:this.leftBound,
+      rightBound:this.rightBound,
+      width:this.grid.width,
+      startingBubbleY:10
+    });
+    this.game.add.existing(this.bubbleGrid);
   }
   update() {
     //Move with A and D.
@@ -70,7 +80,7 @@ export default class extends Phaser.State {
     //Check collision between the bubble that is being shot and the bubbles on the grid
     this.game.physics.arcade.overlap(
       this.ship.bubble,
-      this.bubblesOnGrid,
+      this.bubbleGrid.collisionGroup,
       this.bubbleCollision,
       null,
       this
@@ -89,8 +99,10 @@ export default class extends Phaser.State {
 
   //Gets called when the bubble that is currently being shot hits one of the bubbles on the grid.
   bubbleCollision(activeBubble, gridBubble) {
-    gridBubble.kill();
-    activeBubble.kill();
+    //activeBubble.kill();
+    //gridBubble.kill();
+    this.ship.bubble = null;
+    this.bubbleGrid.snapToGrid(activeBubble.body.center.x,activeBubble.body.center.y,activeBubble);
     this.ship.readyGun();
     this.bubbleOrder.updateOrder();
   }
