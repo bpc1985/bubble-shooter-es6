@@ -78,7 +78,7 @@ export default class extends Phaser.Sprite {
  }
 
  getCurrentSpeed(){
-     return 10;
+     return 0;
  }
 
  addBubbleToGrid(i,j){
@@ -110,25 +110,33 @@ export default class extends Phaser.Sprite {
      return color + 'bubble';
  }
  onHit(gridbubble){
-     var startingI = gridbubble.gridPosition.i;
-     var startingJ = gridbubble.gridPosition.j;
-     var gridBubbleColor = gridbubble.color;
-     //this.grid[startingJ][startingI].kill();
-     gridbubble.kill();
-     var offset = startingJ % 2;
-     for(var i = 0; i < this.nearbyPositions[offset].length; i++){
-         var workingI = startingI + this.nearbyPositions[offset][i][1];
-         var workingJ = startingJ + this.nearbyPositions[offset][i][0];
-         if(this.onGrid(workingI,workingJ)){
-             //
-            if(this.grid[workingJ][workingI]!=null && this.grid[workingJ][workingI]!= undefined && this.grid[workingJ][workingI].alive){
-                this.recursiveDestruction(workingI,workingJ,gridBubbleColor);
-            }
-            
-         }
-         
-     }
-     
+     //var startingI = gridbubble.gridPosition.i;
+     //var startingJ = gridbubble.gridPosition.j;
+     //var gridBubbleColor = gridbubble.color;
+     ////this.grid[startingJ][startingI].kill();
+     //gridbubble.kill();
+     //var offset = startingJ % 2;
+     //for(var i = 0; i < this.nearbyPositions[offset].length; i++){
+     //    var workingI = startingI + this.nearbyPositions[offset][i][1];
+     //    var workingJ = startingJ + this.nearbyPositions[offset][i][0];
+     //    if(this.onGrid(workingI,workingJ)){
+     //        //
+     //       if(this.grid[workingJ][workingI]!=null && this.grid[workingJ][workingI]!= undefined && this.grid[workingJ][workingI].alive){
+     //           this.recursiveDestruction(workingI,workingJ,gridBubbleColor);
+     //       }
+     //       
+     //    }
+     //    
+     //}
+     //
+    var startingI = gridbubble.gridPosition.i;
+    var startingJ = gridbubble.gridPosition.j;
+    var gridBubbleColor = gridbubble.color;
+    var group = this.findGroup(startingI,startingJ,true,gridBubbleColor);
+    for(var i = 0; i<group.length;i++){
+        group[i].kill();
+    }
+    this.findUnconnectedGroups();
  }
  recursiveDestruction(i,j,color){
      if(color === this.grid[j][i].color){
@@ -151,11 +159,71 @@ export default class extends Phaser.Sprite {
  }
 
  onGrid(i,j){
-     if(0<=j && j<this.grid.length-1){
+     if(this.grid.length-this.gridHeight<=j && j<this.grid.length-1){
          if(0 <= i && i<this.grid[j].length){
              return true;
          }
      }
      return false;
+ }
+
+ findGroup(startI,startJ,reset,color){
+     if(this.onGrid(startI,startJ)){
+        if(reset === true){
+            this.resetChecked();
+        }
+        var offset = startJ%2;
+        var group = [this.grid[startJ][startI]];
+        this.grid[startJ][startI].checked =true;
+        for(var k = 0; k < this.nearbyPositions[offset].length; k++){
+            var workingI = startI + this.nearbyPositions[offset][k][1];
+            var workingJ = startJ + this.nearbyPositions[offset][k][0];
+            //console.log(workingJ + "," +workingI);
+            if(this.onGrid(workingI,workingJ)){
+                if(this.grid[workingJ][workingI]!=null && this.grid[workingJ][workingI].alive && this.grid[workingJ][workingI].checked === false){
+                    if(color ===null){
+                        group = group.concat(this.findGroup(workingI,workingJ,false,null));
+                    }else if(this.grid[workingJ][workingI].color === color){
+                        group = group.concat(this.findGroup(workingI,workingJ,false,color));
+                    }
+                }
+                
+            }
+        }
+        return group;
+
+     }else{
+         return [];
+     }
+     
+     
+ }
+ resetChecked(){
+     for(var j = this.grid.length-this.gridHeight; j < this.grid.length-1;j++){
+         for(var i = 0;i<this.grid[j].length;i++){
+            if(this.grid[j][i]!=null){
+                this.grid[j][i].checked = false;
+            }
+         }
+     }
+ }
+
+ findUnconnectedGroups(){
+     this.resetChecked();
+     for(var i = 0; i<this.grid[this.grid.length-2].length;i++){
+         //console.log(workingJ + "," +workingI);
+         this.findGroup(i,this.grid.length-2,false,null);
+     }
+     this.killUnchecked();
+ }
+
+ killUnchecked(){
+    for(var j = this.grid.length-this.gridHeight; j < this.grid.length-1;j++){
+         for(var i = 0;i<this.grid[j].length;i++){
+            if(this.grid[j][i]!=null && this.grid[j][i].checked === false){
+                this.grid[j][i].kill();
+            }
+         }
+     }
  }
 }

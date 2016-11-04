@@ -32,8 +32,9 @@ export default class extends Phaser.Sprite {
         color:this.getBubbleColor(0),
         gridPosition:{i:0,j:0}
       });
+    this.bubbleImage.scale.setTo(0.5,0.5);
     this.game.add.existing(this.bubbleImage);
-
+    
   }
 
   update () {
@@ -61,7 +62,7 @@ export default class extends Phaser.Sprite {
     else {
       this.body.velocity.x = 0;
     }
-    this.bubbleImage.body.velocity=this.body.velocity;
+    this.bubbleImage.body.velocity.x = this.body.velocity.x;
 
   }
 
@@ -89,15 +90,23 @@ export default class extends Phaser.Sprite {
         gridPosition:{i:0,j:0}
       });
       this.bubble.body.velocity = shotVelocity;
+      this.bubble.body.setCircle(8);
+      this.bubble.scale.setTo(0.5,0.5);
       this.bubbleImage.loadTexture(this.getBubbleAsset(1));
+      this.game.add.existing(this.bubble);
+      return true;
     }
+    return false;
   }
 
   readyGun(){
-      this.readyToShoot = true;
-      this.bubbleOrder[0] = this.bubbleOrder[1];
-      this.bubbleOrder[1] = this.bubbleColors[Math.floor((Math.random() * this.bubbleColors.length))];
-      
+      if(this.readyToShoot === false){
+        this.readyToShoot = true;
+        this.bubbleOrder[0] = this.bubbleOrder[1];
+        this.bubbleOrder[1] = this.bubbleColors[Math.floor((Math.random() * this.bubbleColors.length))];
+      }
+
+
   }
 
   getBubbleAsset(i){
