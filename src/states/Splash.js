@@ -15,7 +15,11 @@ export default class extends Phaser.State {
     //
     this.load.image('bluebubble', 'assets/images/blueBubble.png');
     this.load.image('redbubble', 'assets/images/redBubble.png');
+    this.load.image('yellowbubble', 'assets/images/yellowBubble.png');
+    this.load.image('greenbubble', 'assets/images/greenBubble.png');
+    this.load.image('purplebubble', 'assets/images/purpleBubble.png');
     this.load.image('bubbleorder', 'assets/images/bubbleOrderElement.png');
+    this.load.image('ship', 'assets/images/bubble_spaceship.png');
     
   }
 

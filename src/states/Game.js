@@ -15,26 +15,29 @@ export default class extends Phaser.State {
     //These bounds probably need something more intelligent. These are just some made up values
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
     this.bubbleRadius = 32;
-    this.grid = {width: 20, height: 15};
+    this.grid = {width: 12, height: 15};
     this.leftBound = 32;
     this.rightBound = this.leftBound + this.grid.width * this.bubbleRadius;
-
+    //this.bubbleColors = ['blue', 'red','purple','green','yellow'];
+    this.bubbleColors = ['blue', 'red','green'];
     //DEBUG lines
     this.leftLine = new Phaser.Line(this.leftBound, 0, this.leftBound, this.game.world.height);
     this.rightLine = new Phaser.Line(this.rightBound, 0, this.rightBound, this.game.world.height);
-    this.bottomLine = new Phaser.Line(this.leftBound, this.game.world.height - 2*this.bubbleRadius, this.rightBound, this.game.world.height - 2* this.bubbleRadius);
+    //this.bottomLine = new Phaser.Line(this.leftBound, this.game.world.height - 2*this.bubbleRadius, this.rightBound, this.game.world.height - 2* this.bubbleRadius);
     this.centerLine = new Phaser.Line(this.leftBound + (this.rightBound - this.leftBound)/2, this.game.world.height - 2* this.bubbleRadius, this.leftBound + (this.rightBound - this.leftBound)/2, this.game.world.height);
 
     //The ship's left and the right boundary are set bubbleRadius/2 inwards to avoid shooting bubbles into the walls
     this.ship = new Ship({
       game: this.game,
       x: this.leftBound + (this.rightBound - this.leftBound) / 2,
-      y: this.game.world.height - 1.5* this.bubbleRadius,
-      asset: 'redbubble',
+      y: this.game.world.height - this.bubbleRadius,
+      asset: 'ship',
       rightBound:this.rightBound ,
-      leftBound:this.leftBound
+      leftBound:this.leftBound,
+      bubbleColors: this.bubbleColors
     });
     this.game.add.existing(this.ship);
+
 
     this.bubblesOnGrid = [];
     //dathis.makeGrid();
@@ -42,7 +45,7 @@ export default class extends Phaser.State {
     this.bubbleOrder = new BubbleOrder({
       game: this.game,
       x:this.rightBound + this.bubbleRadius,
-      y:this.bubbleRadius * 8,
+      y:this.bubbleRadius * 20,
       asset:'bubbleorder',
       ship:this.ship
     });
@@ -55,7 +58,8 @@ export default class extends Phaser.State {
       leftBound:this.leftBound,
       rightBound:this.rightBound,
       width:this.grid.width,
-      startingBubbleY:10
+      startingBubbleY:10,
+      bubbleColors:this.bubbleColors
     });
     this.game.add.existing(this.bubbleGrid);
   }
@@ -91,7 +95,7 @@ export default class extends Phaser.State {
     if (__DEV__) {
       //DEBUG LINES
       this.game.debug.geom(this.leftLine, "#000000");
-      this.game.debug.geom(this.bottomLine, "#000000");
+      //this.game.debug.geom(this.bottomLine, "#000000");
       this.game.debug.geom(this.rightLine, "#000000");
       this.game.debug.geom(this.centerLine, "#000000");
     }
@@ -99,12 +103,18 @@ export default class extends Phaser.State {
 
   //Gets called when the bubble that is currently being shot hits one of the bubbles on the grid.
   bubbleCollision(activeBubble, gridBubble) {
-    activeBubble.kill();
-    gridBubble.kill();
+    //if(activeBubble.alive){
+      if(activeBubble.color === gridBubble.color){
+        this.bubbleGrid.onHit(gridBubble);
+      }
+      activeBubble.kill();
+      this.ship.readyGun();
+      this.bubbleOrder.updateOrder();
+    //}
+
     //this.ship.bubble = null;
     //this.bubbleGrid.snapToGrid(activeBubble.body.center.x,activeBubble.body.center.y,activeBubble);
-    this.ship.readyGun();
-    this.bubbleOrder.updateOrder();
+
   }
 
   //Makes a grid of bubbles
