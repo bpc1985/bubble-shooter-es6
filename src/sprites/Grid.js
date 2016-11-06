@@ -14,11 +14,14 @@ export default class extends Phaser.Sprite {
     this.bubbleColors = bubbleColors;
     this.grid = [];
     this.gridWidth = width;
-    this.gridHeight = Math.ceil(this.game.world.height/this.bubbleRadius)+1
+    
+    this.gridHeight = Math.ceil(this.game.world.height/this.bubbleRadius)+1 //+1 So that there the bubble feed seems seemless
     this.collisionGroup = new Phaser.Group(this.game);
     this.makegrid(startingBubbleY);
+    
+    //Nearby bubbles on the grid with j,i coordinates
+    //Should be used nearbyPositions[offset] where offset is j%2
     this.nearbyPositions = [];
-    //j,i
     this.nearbyPositions[0] = [[-1,-1],
         [-1,0],
         [0,-1],
@@ -31,13 +34,21 @@ export default class extends Phaser.Sprite {
         [0,1],
         [1,0],
         [1,1]];
-    
+    //The the nearby bubbles center point offsets
+    this.nearbyCenterPoints = [new Phaser.Point(-this.bubbleRadius/2,this.bubbleRadius),
+    new Phaser.Point(this.bubbleRadius/2,this.bubbleRadius),
+    new Phaser.Point(-this.bubbleRadius,0),
+    new Phaser.Point(this.bubbleRadius,0),
+    new Phaser.Point(-this.bubbleRadius/2,-this.bubbleRadius),
+    new Phaser.Point(this.bubbleRadius/2,-this.bubbleRadius)
+    ];
 
+    
     
   }
 
   update () {
-      //Create a new row when you see start seeing the new one
+      //Create a new row when you see start seeing the top one
       if(this.grid[this.grid.length-1][0].body.bottom>0){
         var length = this.grid.length;
         var row_length = this.gridWidth;
@@ -78,16 +89,21 @@ export default class extends Phaser.Sprite {
  }
 
  getCurrentSpeed(){
-     return 0;
+     return 10;
  }
 
- addBubbleToGrid(i,j){
+ addBubbleToGrid(i,j,color){
     var offset = this.bubbleRadius/2;
     if(j%2 === 1){
         offset+=this.bubbleRadius/2;
     }
-    var color = this.getRandomColor();
-
+    
+    if(color != undefined){
+        color = color;
+    }else{
+        var color = this.getRandomColor();
+    }
+    
     this.grid[j][i] = new Bubble({
         game:this.game,
         x:this.leftBound+offset+i*this.bubbleRadius,
@@ -110,52 +126,18 @@ export default class extends Phaser.Sprite {
      return color + 'bubble';
  }
  onHit(gridbubble){
-     //var startingI = gridbubble.gridPosition.i;
-     //var startingJ = gridbubble.gridPosition.j;
-     //var gridBubbleColor = gridbubble.color;
-     ////this.grid[startingJ][startingI].kill();
-     //gridbubble.kill();
-     //var offset = startingJ % 2;
-     //for(var i = 0; i < this.nearbyPositions[offset].length; i++){
-     //    var workingI = startingI + this.nearbyPositions[offset][i][1];
-     //    var workingJ = startingJ + this.nearbyPositions[offset][i][0];
-     //    if(this.onGrid(workingI,workingJ)){
-     //        //
-     //       if(this.grid[workingJ][workingI]!=null && this.grid[workingJ][workingI]!= undefined && this.grid[workingJ][workingI].alive){
-     //           this.recursiveDestruction(workingI,workingJ,gridBubbleColor);
-     //       }
-     //       
-     //    }
-     //    
-     //}
-     //
     var startingI = gridbubble.gridPosition.i;
     var startingJ = gridbubble.gridPosition.j;
     var gridBubbleColor = gridbubble.color;
     var group = this.findGroup(startingI,startingJ,true,gridBubbleColor);
-    for(var i = 0; i<group.length;i++){
+    if(group.length >= 3){
+        for(var i = 0; i<group.length;i++){
         group[i].kill();
+        }
+        this.findUnconnectedGroups();
     }
-    this.findUnconnectedGroups();
- }
- recursiveDestruction(i,j,color){
-     if(color === this.grid[j][i].color){
-         this.grid[j][i].kill();
-         var offset = j % 2;
-         for(var k = 0; k < this.nearbyPositions[offset].length; k++){
-            var workingI = i + this.nearbyPositions[offset][k][1];
-            var workingJ = j + this.nearbyPositions[offset][k][0];
-            if(this.onGrid(workingI,workingJ)){
-                if(this.grid[workingJ][workingI]!=null && this.grid[workingJ][workingI]!= undefined && this.grid[workingJ][workingI].alive){
-                    this.recursiveDestruction(workingI,workingJ,color);
-                }
-                
-            }
-         
-     }
-     }else{
-         //Do nothing
-     }
+
+    
  }
 
  onGrid(i,j){
@@ -225,5 +207,46 @@ export default class extends Phaser.Sprite {
             }
          }
      }
+ }
+
+ snapToGrid(snapBubble,gridBubble){
+     var startI = gridBubble.gridPosition.i;
+     var startJ = gridBubble.gridPosition.j;
+     var offset = startJ%2;
+     //snapBubble.body.center;
+     //snapBubble.body.center;
+     //gridBubble.body.center.x;
+     //gridBubble.body.center.y; distance(dest)
+
+
+     var snapIndex = 0;
+     var snapPositionJ = startJ + this.nearbyPositions[offset][snapIndex][0];
+     var snapPositionI = startI + this.nearbyPositions[offset][snapIndex][1];
+     var currentPoint = new Phaser.Point(-100,-100);
+     for(var k = 0; k < this.nearbyPositions[offset].length; k++){
+     
+        var workingI = startI + this.nearbyPositions[offset][k][1];
+        var workingJ = startJ + this.nearbyPositions[offset][k][0];
+        var workingPoint = new Phaser.Point(-100,-100);
+        if(this.onGrid(workingI,workingJ) && (this.grid[workingJ][workingI]===null || this.grid[workingJ][workingI].alive === false)){
+            //console.log(k);
+            Phaser.Point.add(gridBubble.body.position,this.nearbyCenterPoints[k],workingPoint);
+            console.log(Phaser.Point.distance(snapBubble.body.position,workingPoint)+ "," + Phaser.Point.distance(snapBubble.body.position,currentPoint) + "," + k);
+            if(Phaser.Point.distance(snapBubble.body.position,workingPoint) < Phaser.Point.distance(snapBubble.body.position,currentPoint)){
+                
+                snapIndex = k;
+                snapPositionJ = workingJ;
+                snapPositionI = workingI;
+                currentPoint = workingPoint;
+            }
+        }
+
+
+     }
+
+     this.addBubbleToGrid(snapPositionI,snapPositionJ,snapBubble.color);
+     this.collisionGroup.setAll('body.velocity.y', this.getCurrentSpeed());
+     snapBubble.kill();
+     return this.grid[snapPositionJ][snapPositionI];
  }
 }

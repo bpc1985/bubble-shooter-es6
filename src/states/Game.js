@@ -27,8 +27,8 @@ export default class extends Phaser.State {
     this.centerLine = new Phaser.Line(this.leftBound + (this.rightBound - this.leftBound)/2, this.game.world.height - 2* this.bubbleRadius, this.leftBound + (this.rightBound - this.leftBound)/2, this.game.world.height);
     //background
 
-    this.background = this.game.add.image(this.leftBound,0,'background');
-    this.game.stage.backgroundColor = "#000000"
+    //this.background = this.game.add.image(this.leftBound,0,'background');
+    //this.game.stage.backgroundColor = "#000000"
     //The ship's left and the right boundary are set bubbleRadius/2 inwards to avoid shooting bubbles into the walls
     this.ship = new Ship({
       game: this.game,
@@ -61,10 +61,24 @@ export default class extends Phaser.State {
       leftBound:this.leftBound,
       rightBound:this.rightBound,
       width:this.grid.width,
-      startingBubbleY:15,
+      startingBubbleY:20,
       bubbleColors:this.bubbleColors
     });
     this.game.add.existing(this.bubbleGrid);
+
+    //this.testBubble = new Bubble({
+    //    game:this.game,
+    //    x:400,
+    //    y:400,
+    //    asset:'bluebubble',
+    //    rightBound:this.rightBound,
+    //    leftBound:this.leftBound,
+    //    color:'blue',
+    //    gridPosition: {i:10,j:10}
+    //});
+    //this.game.add.existing(this.testBubble);
+    //this.testLine1 = new Phaser.Line(this.testBubble.body.x-5, this.testBubble.body.y, this.testBubble.body.x+5, this.testBubble.body.y);
+    //this.testLine2 = new Phaser.Line(this.testBubble.body.x, this.testBubble.body.y-5, this.testBubble.body.x, this.testBubble.body.y+5);
   }
   update() {
     //Move with A and D.
@@ -103,16 +117,20 @@ export default class extends Phaser.State {
       //this.game.debug.geom(this.bottomLine, "#000000");
       this.game.debug.geom(this.rightLine, "#000000");
       this.game.debug.geom(this.centerLine, "#000000");
+      this.game.debug.geom(this.testLine1, "#000000");
+      this.game.debug.geom(this.testLine2, "#000000");
     }
   }
 
   //Gets called when the bubble that is currently being shot hits one of the bubbles on the grid.
   bubbleCollision(activeBubble, gridBubble) {
     if(activeBubble.alive){
-      if(activeBubble.color === gridBubble.color){
-        this.bubbleGrid.onHit(gridBubble);
-      }
-      activeBubble.kill();
+      //if(activeBubble.color === gridBubble.color){
+      //  this.bubbleGrid.onHit(gridBubble);
+      //}
+      //activeBubble.kill();
+      var newBubble = this.bubbleGrid.snapToGrid(activeBubble,gridBubble);
+      this.bubbleGrid.onHit(newBubble);
       this.ship.readyGun();
       this.bubbleOrder.updateOrder();
       
