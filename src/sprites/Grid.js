@@ -134,6 +134,7 @@ export default class extends Phaser.Sprite {
         for(var i = 0; i<group.length;i++){
         group[i].kill();
         }
+        
         this.findUnconnectedGroups();
     }
 
@@ -231,7 +232,7 @@ export default class extends Phaser.Sprite {
         if(this.onGrid(workingI,workingJ) && (this.grid[workingJ][workingI]===null || this.grid[workingJ][workingI].alive === false)){
             //console.log(k);
             Phaser.Point.add(gridBubble.body.position,this.nearbyCenterPoints[k],workingPoint);
-            console.log(Phaser.Point.distance(snapBubble.body.position,workingPoint)+ "," + Phaser.Point.distance(snapBubble.body.position,currentPoint) + "," + k);
+            //console.log(Phaser.Point.distance(snapBubble.body.position,workingPoint)+ "," + Phaser.Point.distance(snapBubble.body.position,currentPoint) + "," + k);
             if(Phaser.Point.distance(snapBubble.body.position,workingPoint) < Phaser.Point.distance(snapBubble.body.position,currentPoint)){
                 
                 snapIndex = k;

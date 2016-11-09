@@ -32,7 +32,7 @@ export default class extends Phaser.Sprite {
         color:this.getBubbleColor(0),
         gridPosition:{i:0,j:0}
       });
-    this.bubbleImage.scale.setTo(0.5,0.5);
+    //this.bubbleImage.scale.setTo(0.5,0.5);
     this.game.add.existing(this.bubbleImage);
     
   }
@@ -42,7 +42,7 @@ export default class extends Phaser.Sprite {
   }
 
   move(direction) {
-
+    //Pls fix all of this bad code
 
     if(direction === 'left'){
       if(this.body.left>this.leftBound){
@@ -50,6 +50,7 @@ export default class extends Phaser.Sprite {
       }else{
         this.body.velocity.x = 0;
         this.body.x = this.leftBound;
+        this.bubbleImage.body.x = this.leftBound + this.body.width/2 - 16;
       }
     } else if(direction === 'right') {
       if(this.body.right < this.rightBound) {
@@ -57,6 +58,7 @@ export default class extends Phaser.Sprite {
       } else{
         this.body.velocity.x = 0;
         this.body.x=this.rightBound - this.body.width ;
+        this.bubbleImage.body.x = this.rightBound - this.body.width/2-16;
       }
     }
     else {
@@ -80,8 +82,8 @@ export default class extends Phaser.Sprite {
         game: this.game,
         //x :this.body.center.x,
         //y: this.body.center.y,
-        x:this.bubbleImage.body.center.x,
-        y:this.bubbleImage.body.center.y,
+        x:this.bubbleImage.body.x+16,
+        y:this.bubbleImage.body.y+16,
         asset: this.getBubbleAsset(0),
         rightBound: this.rightBound,
         leftBound: this.leftBound,

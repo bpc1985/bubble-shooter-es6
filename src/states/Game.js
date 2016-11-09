@@ -28,7 +28,7 @@ export default class extends Phaser.State {
     //background
 
     //this.background = this.game.add.image(this.leftBound,0,'background');
-    //this.game.stage.backgroundColor = "#000000"
+    this.game.stage.backgroundColor = "#000000"
     //The ship's left and the right boundary are set bubbleRadius/2 inwards to avoid shooting bubbles into the walls
     this.ship = new Ship({
       game: this.game,
@@ -61,7 +61,7 @@ export default class extends Phaser.State {
       leftBound:this.leftBound,
       rightBound:this.rightBound,
       width:this.grid.width,
-      startingBubbleY:20,
+      startingBubbleY:10,
       bubbleColors:this.bubbleColors
     });
     this.game.add.existing(this.bubbleGrid);
@@ -79,8 +79,13 @@ export default class extends Phaser.State {
     //this.game.add.existing(this.testBubble);
     //this.testLine1 = new Phaser.Line(this.testBubble.body.x-5, this.testBubble.body.y, this.testBubble.body.x+5, this.testBubble.body.y);
     //this.testLine2 = new Phaser.Line(this.testBubble.body.x, this.testBubble.body.y-5, this.testBubble.body.x, this.testBubble.body.y+5);
+    this.score = 0;
+    //this.scoreText = new Text(this.game,this.rightBound + 64, 100,this.score);
+    this.scoreText = this.game.add.text(this.rightBound,100,"Asd",{fill: '#FFFFFF',fontSize: 20});
+    this.game.input.activePointer.leftButton.onDown.add(this.mouseDown,this);
   }
   update() {
+    this.scoreText.setText('Distance Traveled:' + '\n' +  Math.floor(this.bubbleGrid.body.y-this.game.world.height));
     //Move with A and D.
     //Shoot with left mouse button.
     //Ship movement
@@ -94,7 +99,7 @@ export default class extends Phaser.State {
 
     //Shooting the bubble
     if(this.game.input.activePointer.leftButton.isDown) {
-      var shot = this.ship.shoot();
+      //var shot =  this.ship.shoot();
 
       
       
@@ -108,17 +113,29 @@ export default class extends Phaser.State {
       null,
       this
     );
+    //Ship Collision with bubbles
+    this.game.physics.arcade.overlap(
+      this.ship,
+      this.bubbleGrid.collisionGroup,
+      this.shipCollision,
+      null,
+      this
+    );
+  }
+
+  mouseDown(){
+     this.ship.shoot();
   }
 
   render () {
     if (__DEV__) {
       //DEBUG LINES
-      this.game.debug.geom(this.leftLine, "#000000");
+      this.game.debug.geom(this.leftLine, "#FFFFFF");
       //this.game.debug.geom(this.bottomLine, "#000000");
-      this.game.debug.geom(this.rightLine, "#000000");
-      this.game.debug.geom(this.centerLine, "#000000");
-      this.game.debug.geom(this.testLine1, "#000000");
-      this.game.debug.geom(this.testLine2, "#000000");
+      this.game.debug.geom(this.rightLine, "#FFFFFF");
+      //this.game.debug.geom(this.centerLine, "#000000");
+      //this.game.debug.geom(this.testLine1, "#000000");
+      //this.game.debug.geom(this.testLine2, "#000000");
     }
   }
 
@@ -141,25 +158,12 @@ export default class extends Phaser.State {
 
   }
 
-  //Makes a grid of bubbles
-  makeGrid() {
-    //Creating some targets
-    //Not Final
-    for(var j=0; j < 3; j++) {
-      for(var i = 0; i < 20; i++) {
-        this.bubblesOnGrid[j * 20 +i] = new Bubble({
-          game: this.game,
-          x: this.leftBound + i*this.bubbleRadius + this.bubbleRadius/2,
-          y: 400 + j*this.bubbleRadius,
-          asset: 'bluebubble',
-          rightBound: this.rightBound,
-          leftBound: this.leftBound
-        });
-        this.bubblesOnGrid[j*20 +i].shot = true;
-        this.game.add.existing(this.bubblesOnGrid[j * 20 + i]);
-      }
+
+    shipCollision(ship, gridBubble) {
+       this.state.start('Game');
+      
     }
-  }
+  
 
 
 
