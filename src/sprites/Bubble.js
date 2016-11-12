@@ -10,7 +10,7 @@ export default class extends Phaser.Sprite {
     this.shot = false;
     this.game.physics.arcade.enable(this);
     this.margin = 0;
-    this.body.setCircle(16-this.margin);
+    this.body.setCircle(this.bubbleRadius/2-this.margin);
     this.rightBound = rightBound;
     this.leftBound = leftBound;
     this.ship = ship;

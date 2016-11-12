@@ -9,13 +9,13 @@ export default class extends Phaser.Sprite {
     this.game = game;
     this.rightBound = rightBound;
     this.leftBound = leftBound;
-    this.bubbleRadius=32;
+    this.bubbleRadius=this.game.levelData.bubbleRadius;
     this.game.physics.arcade.enable(this);
     this.bubbleColors = bubbleColors;
     this.grid = [];
     this.gridWidth = width;
     
-    this.gridHeight = Math.ceil(this.game.world.height/this.bubbleRadius)+1 //+1 So that there the bubble feed seems seemless
+    this.gridHeight = Math.ceil(this.game.world.height/this.bubbleRadius)+2 //+2 So that there the bubble feed seems seamless
     this.collisionGroup = new Phaser.Group(this.game);
     this.makegrid(startingBubbleY);
     
@@ -34,7 +34,7 @@ export default class extends Phaser.Sprite {
         [0,1],
         [1,0],
         [1,1]];
-    //The the nearby bubbles center point offsets
+    //The the nearby bubbles center point offsets. The y coordinates are reversed when compared to nearbyPositions because game y goes from top to bottom and grid y goes from bottom to top.
     this.nearbyCenterPoints = [new Phaser.Point(-this.bubbleRadius/2,this.bubbleRadius),
     new Phaser.Point(this.bubbleRadius/2,this.bubbleRadius),
     new Phaser.Point(-this.bubbleRadius,0),
@@ -46,10 +46,10 @@ export default class extends Phaser.Sprite {
     
     
   }
-
+  //TODO MAKE THE STUFF THAT DOES NOT DEPEND ON THE GRID
   update () {
       //Create a new row when you see start seeing the top one
-      if(this.grid[this.grid.length-1][0].body.bottom>0){
+      if(this.grid[this.grid.length-2][0].body.bottom>0){
         var length = this.grid.length;
         var row_length = this.gridWidth;
         if(length%2 === 1){
@@ -67,8 +67,7 @@ export default class extends Phaser.Sprite {
     }
 
   makegrid(startingBubbleY){
-    
-
+    //Make the hexagonal grid. Offset the bubbles on every other row. Start with bubbles from row number startingBubbleY.
     for(var j = 0; j<this.gridHeight;j++){
         this.grid[j] = [];
         var row_length = this.gridWidth;
@@ -84,15 +83,16 @@ export default class extends Phaser.Sprite {
             
         }
    }
-   this.body.velocity.y =this.getCurrentSpeed();
+   this.body.velocity.y =this.getCurrentSpeed(); //Sets the speed of the grid object
    this.collisionGroup.setAll('body.velocity.y', this.getCurrentSpeed());
  }
 
  getCurrentSpeed(){
-     return 10;
+     return this.game.levelData.scrollSpeedInitial;
  }
 
  addBubbleToGrid(i,j,color){
+     //Add a bubble to the grid with color(random color if not defined).
     var offset = this.bubbleRadius/2;
     if(j%2 === 1){
         offset+=this.bubbleRadius/2;
@@ -142,7 +142,7 @@ export default class extends Phaser.Sprite {
  }
 
  onGrid(i,j){
-     if(this.grid.length-this.gridHeight<=j && j<this.grid.length-1){
+     if(this.getLowestRow()<=j && j<this.grid.length-1){
          if(0 <= i && i<this.grid[j].length){
              return true;
          }
@@ -182,7 +182,7 @@ export default class extends Phaser.Sprite {
      
  }
  resetChecked(){
-     for(var j = this.grid.length-this.gridHeight; j < this.grid.length-1;j++){
+     for(var j = this.getLowestRow(); j < this.grid.length-1;j++){
          for(var i = 0;i<this.grid[j].length;i++){
             if(this.grid[j][i]!=null){
                 this.grid[j][i].checked = false;
@@ -194,14 +194,14 @@ export default class extends Phaser.Sprite {
  findUnconnectedGroups(){
      this.resetChecked();
      for(var i = 0; i<this.grid[this.grid.length-2].length;i++){
-         //console.log(workingJ + "," +workingI);
+         //this.grid.length-2 is the current visible top row
          this.findGroup(i,this.grid.length-2,false,null);
      }
      this.killUnchecked();
  }
 
  killUnchecked(){
-    for(var j = this.grid.length-this.gridHeight; j < this.grid.length-1;j++){
+    for(var j = this.getLowestRow(); j < this.grid.length-1;j++){
          for(var i = 0;i<this.grid[j].length;i++){
             if(this.grid[j][i]!=null && this.grid[j][i].checked === false){
                 this.grid[j][i].kill();
@@ -211,30 +211,23 @@ export default class extends Phaser.Sprite {
  }
 
  snapToGrid(snapBubble,gridBubble){
+     //The algorithm looks for a free position on grid that is closest to the position of the bubble that needs to be snapped to the grid.
+     //It only looks through the positions that are next to the grid bubble.
      var startI = gridBubble.gridPosition.i;
      var startJ = gridBubble.gridPosition.j;
      var offset = startJ%2;
-     //snapBubble.body.center;
-     //snapBubble.body.center;
-     //gridBubble.body.center.x;
-     //gridBubble.body.center.y; distance(dest)
-
-
-     var snapIndex = 0;
+     
+     var snapIndex = 0; // Not used. Probably not needed. DELETE
      var snapPositionJ = startJ + this.nearbyPositions[offset][snapIndex][0];
      var snapPositionI = startI + this.nearbyPositions[offset][snapIndex][1];
      var currentPoint = new Phaser.Point(-100,-100);
      for(var k = 0; k < this.nearbyPositions[offset].length; k++){
-     
         var workingI = startI + this.nearbyPositions[offset][k][1];
         var workingJ = startJ + this.nearbyPositions[offset][k][0];
         var workingPoint = new Phaser.Point(-100,-100);
         if(this.onGrid(workingI,workingJ) && (this.grid[workingJ][workingI]===null || this.grid[workingJ][workingI].alive === false)){
-            //console.log(k);
             Phaser.Point.add(gridBubble.body.position,this.nearbyCenterPoints[k],workingPoint);
-            //console.log(Phaser.Point.distance(snapBubble.body.position,workingPoint)+ "," + Phaser.Point.distance(snapBubble.body.position,currentPoint) + "," + k);
             if(Phaser.Point.distance(snapBubble.body.position,workingPoint) < Phaser.Point.distance(snapBubble.body.position,currentPoint)){
-                
                 snapIndex = k;
                 snapPositionJ = workingJ;
                 snapPositionI = workingI;
@@ -249,5 +242,12 @@ export default class extends Phaser.Sprite {
      this.collisionGroup.setAll('body.velocity.y', this.getCurrentSpeed());
      snapBubble.kill();
      return this.grid[snapPositionJ][snapPositionI];
+ }
+
+ getLowestRow(){
+
+    return this.grid.length-this.gridHeight;
+
+
  }
 }

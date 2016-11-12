@@ -13,17 +13,18 @@ export default class extends Phaser.Sprite {
     // for example when we have a grid object we can give it or something.
     this.rightBound = rightBound;
     this.leftBound = leftBound;
-    this.maxSpeed = 300;
-    this.bubbleShootingSpeed = 700;
+    this.maxSpeed = this.game.levelData.shipSpeed;
+    this.bubbleShootingSpeed = this.game.levelData.shootSpeed;
+    this.bubbleRadius = this.game.levelData.bubbleRadius;
     //Available bubble colors
     this.bubbleColors = bubbleColors;
     //Shooting order and ready to shoot
-    this.bubbleOrder = ['blue','red'];
+    this.bubbleOrder = [this.getRandomColor(),this.getRandomColor()];
     this.readyToShoot = true;
 
     this.bubbleImage = new Bubble({
         game: this.game,
-        x :this.body.center.x-32,
+        x :this.body.center.x-this.bubbleRadius,
         y: this.body.center.y-this.height*1.2,
         asset: this.getBubbleAsset(0),
         rightBound: this.rightBound,
@@ -32,7 +33,6 @@ export default class extends Phaser.Sprite {
         color:this.getBubbleColor(0),
         gridPosition:{i:0,j:0}
       });
-    //this.bubbleImage.scale.setTo(0.5,0.5);
     this.game.add.existing(this.bubbleImage);
     
   }
@@ -50,7 +50,7 @@ export default class extends Phaser.Sprite {
       }else{
         this.body.velocity.x = 0;
         this.body.x = this.leftBound;
-        this.bubbleImage.body.x = this.leftBound + this.body.width/2 - 16;
+        this.bubbleImage.body.x = this.leftBound + this.body.width/2 - this.bubbleRadius/2;
       }
     } else if(direction === 'right') {
       if(this.body.right < this.rightBound) {
@@ -58,7 +58,7 @@ export default class extends Phaser.Sprite {
       } else{
         this.body.velocity.x = 0;
         this.body.x=this.rightBound - this.body.width ;
-        this.bubbleImage.body.x = this.rightBound - this.body.width/2-16;
+        this.bubbleImage.body.x = this.rightBound - this.body.width/2- this.bubbleRadius/2;
       }
     }
     else {
@@ -82,8 +82,8 @@ export default class extends Phaser.Sprite {
         game: this.game,
         //x :this.body.center.x,
         //y: this.body.center.y,
-        x:this.bubbleImage.body.x+16,
-        y:this.bubbleImage.body.y+16,
+        x:this.bubbleImage.body.x+this.bubbleRadius/2,
+        y:this.bubbleImage.body.y+this.bubbleRadius/2,
         asset: this.getBubbleAsset(0),
         rightBound: this.rightBound,
         leftBound: this.leftBound,
@@ -92,11 +92,12 @@ export default class extends Phaser.Sprite {
         gridPosition:{i:0,j:0}
       });
       this.bubble.body.velocity = shotVelocity;
-      this.bubble.margin = 4;
-      this.bubble.body.setCircle(16-this.bubble.margin);
+
       //this.bubble.scale.setTo(0.5,0.5);
       this.bubbleImage.loadTexture(this.getBubbleAsset(1));
       this.game.add.existing(this.bubble);
+      this.bubble.margin = 4;
+      this.bubble.body.setCircle(16-this.bubble.margin);
       return true;
     }
     return false;
@@ -106,7 +107,7 @@ export default class extends Phaser.Sprite {
       if(this.readyToShoot === false){
         this.readyToShoot = true;
         this.bubbleOrder[0] = this.bubbleOrder[1];
-        this.bubbleOrder[1] = this.bubbleColors[Math.floor((Math.random() * this.bubbleColors.length))];
+        this.bubbleOrder[1] = this.getRandomColor();
       }
 
 
@@ -117,6 +118,9 @@ export default class extends Phaser.Sprite {
   }
   getBubbleColor(i){
     return this.bubbleOrder[i];
+  }
+  getRandomColor(){
+    return this.bubbleColors[Math.floor((Math.random() * this.bubbleColors.length))];
   }
 
 }

@@ -21,11 +21,13 @@ export default class extends Phaser.State {
     this.load.image('bubbleorder', 'assets/images/bubbleOrderElement.png');
     this.load.image('ship', 'assets/images/bubble_spaceship.png');
     this.load.image('background', 'assets/images/bubble_tausta2.png');
+    this.load.image('minus', 'assets/images/minus.png');
+    this.load.image('plus', 'assets/images/plus.png');
     
   }
 
   create () {
-    this.state.start('Game');
+    this.state.start('StartMenu');
   }
 
 }

@@ -2,7 +2,6 @@
 import Phaser from 'phaser';
 import Bubble from '../sprites/Bubble';
 import Ship from '../sprites/Ship';
-import Board from '../sprites/Board';
 import BubbleOrder from '../sprites/BubbleOrder';
 import Grid from '../sprites/Grid';
 import {setResponsiveWidth} from '../utils';
@@ -12,30 +11,33 @@ export default class extends Phaser.State {
   preload () {}
 
   create () {
-    //These bounds probably need something more intelligent. These are just some made up values
+    //LEVEL BOUNDARIES
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
-    this.bubbleRadius = 32;
-    this.grid = {width: 8, height: 15};
-    this.leftBound = 32;
-    this.rightBound = this.leftBound + this.grid.width * this.bubbleRadius;
-    //this.bubbleColors = ['blue', 'red','purple','green','yellow'];
-    this.bubbleColors = ['blue', 'red','green','yellow'];
+    this.bubbleRadius = this.game.levelData.bubbleRadius;
+    //DELETEthis.grid = {width: 8, height: 15};
+    this.leftBound = this.game.levelData.bubbleRadius;
+    this.rightBound = this.leftBound + this.game.levelData.width * this.bubbleRadius;
+    this.centerBound = this.leftBound + (this.rightBound - this.leftBound) / 2;
+    
     //DEBUG lines
     this.leftLine = new Phaser.Line(this.leftBound, 0, this.leftBound, this.game.world.height);
     this.rightLine = new Phaser.Line(this.rightBound, 0, this.rightBound, this.game.world.height);
     //this.bottomLine = new Phaser.Line(this.leftBound, this.game.world.height - 2*this.bubbleRadius, this.rightBound, this.game.world.height - 2* this.bubbleRadius);
-    this.centerLine = new Phaser.Line(this.leftBound + (this.rightBound - this.leftBound)/2, this.game.world.height - 2* this.bubbleRadius, this.leftBound + (this.rightBound - this.leftBound)/2, this.game.world.height);
-    //background
-
-    //this.background = this.game.add.image(this.leftBound,0,'background');
+    this.centerLine = new Phaser.Line(this.centerBound, this.game.world.height - 2* this.bubbleRadius, this.centerBound, this.game.world.height);
+    
+    //BACKGROUND COLOR AND BUBBLE COLOR
+    this.bubbleColors = this.game.levelData.bubbleColors;
     this.game.stage.backgroundColor = "#000000"
+    //this.background = this.game.add.image(this.leftBound,0,'background');
+
+
     //The ship's left and the right boundary are set bubbleRadius/2 inwards to avoid shooting bubbles into the walls
     this.ship = new Ship({
       game: this.game,
-      x: this.leftBound + (this.rightBound - this.leftBound) / 2,
+      x: this.centerBound,
       y: this.game.world.height - this.bubbleRadius,
       asset: 'ship',
-      rightBound:this.rightBound ,
+      rightBound:this.rightBound,
       leftBound:this.leftBound,
       bubbleColors: this.bubbleColors
     });
@@ -43,7 +45,6 @@ export default class extends Phaser.State {
 
 
     this.bubblesOnGrid = [];
-    //dathis.makeGrid();
 
     this.bubbleOrder = new BubbleOrder({
       game: this.game,
@@ -53,6 +54,7 @@ export default class extends Phaser.State {
       ship:this.ship
     });
     this.game.add.existing(this.bubbleOrder);
+
     this.bubbleGrid= new Grid({
       game:this.game,
       x:this.leftBound,
@@ -60,32 +62,23 @@ export default class extends Phaser.State {
       asset:'redbubble',
       leftBound:this.leftBound,
       rightBound:this.rightBound,
-      width:this.grid.width,
-      startingBubbleY:10,
+      width:this.game.levelData.width,
+      startingBubbleY:this.game.levelData.bubbleStartingHeight,
       bubbleColors:this.bubbleColors
     });
     this.game.add.existing(this.bubbleGrid);
 
-    //this.testBubble = new Bubble({
-    //    game:this.game,
-    //    x:400,
-    //    y:400,
-    //    asset:'bluebubble',
-    //    rightBound:this.rightBound,
-    //    leftBound:this.leftBound,
-    //    color:'blue',
-    //    gridPosition: {i:10,j:10}
-    //});
-    //this.game.add.existing(this.testBubble);
-    //this.testLine1 = new Phaser.Line(this.testBubble.body.x-5, this.testBubble.body.y, this.testBubble.body.x+5, this.testBubble.body.y);
-    //this.testLine2 = new Phaser.Line(this.testBubble.body.x, this.testBubble.body.y-5, this.testBubble.body.x, this.testBubble.body.y+5);
+
     this.score = 0;
-    //this.scoreText = new Text(this.game,this.rightBound + 64, 100,this.score);
     this.scoreText = this.game.add.text(this.rightBound,100,"Asd",{fill: '#FFFFFF',fontSize: 20});
+    
+    //Create the shooting callback
     this.game.input.activePointer.leftButton.onDown.add(this.mouseDown,this);
   }
   update() {
+
     this.scoreText.setText('Distance Traveled:' + '\n' +  Math.floor(this.bubbleGrid.body.y-this.game.world.height));
+    
     //Move with A and D.
     //Shoot with left mouse button.
     //Ship movement
@@ -95,14 +88,6 @@ export default class extends Phaser.State {
       this.ship.move('right');
     } else {
       this.ship.move('nowhere');
-    }
-
-    //Shooting the bubble
-    if(this.game.input.activePointer.leftButton.isDown) {
-      //var shot =  this.ship.shoot();
-
-      
-      
     }
 
     //Check collision between the bubble that is being shot and the bubbles on the grid
@@ -142,27 +127,18 @@ export default class extends Phaser.State {
   //Gets called when the bubble that is currently being shot hits one of the bubbles on the grid.
   bubbleCollision(activeBubble, gridBubble) {
     if(activeBubble.alive){
-      //if(activeBubble.color === gridBubble.color){
-      //  this.bubbleGrid.onHit(gridBubble);
-      //}
-      //activeBubble.kill();
       var newBubble = this.bubbleGrid.snapToGrid(activeBubble,gridBubble);
       this.bubbleGrid.onHit(newBubble);
       this.ship.readyGun();
       this.bubbleOrder.updateOrder();
-      
     }
-
-    //this.ship.bubble = null;
-    //this.bubbleGrid.snapToGrid(activeBubble.body.center.x,activeBubble.body.center.y,activeBubble);
-
   }
 
-
-    shipCollision(ship, gridBubble) {
-       this.state.start('Game');
-      
-    }
+  //Called when the ship collides with the bubbles on the grid
+  shipCollision(ship, gridBubble) {
+      this.state.start('Game');
+    
+  }
   
 
 
