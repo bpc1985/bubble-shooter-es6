@@ -42,14 +42,16 @@ export default class extends Phaser.Sprite {
     new Phaser.Point(-this.bubbleRadius/2,-this.bubbleRadius),
     new Phaser.Point(this.bubbleRadius/2,-this.bubbleRadius)
     ];
-
-    
+    this.newLineCheck = 0;
+    this.newLineStaticDistance = this.game.world.height; 
     
   }
   //TODO MAKE THE STUFF THAT DOES NOT DEPEND ON THE GRID
   update () {
       //Create a new row when you see start seeing the top one
-      if(this.grid[this.grid.length-2][0].body.bottom>0){
+      //if(this.grid[this.grid.length-2][0].body.bottom>0){
+        if(this.body.y-this.newLineStaticDistance-this.newLineCheck>0){
+        this.newLineCheck += this.bubbleRadius;
         var length = this.grid.length;
         var row_length = this.gridWidth;
         if(length%2 === 1){

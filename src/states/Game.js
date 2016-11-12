@@ -130,13 +130,14 @@ export default class extends Phaser.State {
       var newBubble = this.bubbleGrid.snapToGrid(activeBubble,gridBubble);
       this.bubbleGrid.onHit(newBubble);
       this.ship.readyGun();
-      this.bubbleOrder.updateOrder();
+      //this.bubbleOrder.updateOrder();
     }
   }
 
   //Called when the ship collides with the bubbles on the grid
   shipCollision(ship, gridBubble) {
-      this.state.start('Game');
+      this.game.input.activePointer.leftButton.onDown.remove(this.mouseDown,this);
+      this.state.start('StartMenu');
     
   }
   

@@ -89,7 +89,7 @@ export default class extends Phaser.Sprite {
         leftBound: this.leftBound,
         ship:this,
         color:this.getBubbleColor(0),
-        gridPosition:{i:0,j:0}
+        gridPosition:{i:-1,j:-1}
       });
       this.bubble.body.velocity = shotVelocity;
 
