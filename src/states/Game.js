@@ -24,7 +24,8 @@ export default class extends Phaser.State {
     this.rightLine = new Phaser.Line(this.rightBound, 0, this.rightBound, this.game.world.height);
     //this.bottomLine = new Phaser.Line(this.leftBound, this.game.world.height - 2*this.bubbleRadius, this.rightBound, this.game.world.height - 2* this.bubbleRadius);
     this.centerLine = new Phaser.Line(this.centerBound, this.game.world.height - 2* this.bubbleRadius, this.centerBound, this.game.world.height);
-    
+    this.leftSide = this.game.add.sprite(this.leftBound-4,0,'side');
+    this.rightSide = this.game.add.sprite(this.rightBound,0,'side');
     //BACKGROUND COLOR AND BUBBLE COLOR
     this.bubbleColors = this.game.levelData.bubbleColors;
     this.game.stage.backgroundColor = "#000000"
@@ -70,14 +71,14 @@ export default class extends Phaser.State {
 
 
     this.score = 0;
-    this.scoreText = this.game.add.text(this.rightBound,100,"Asd",{fill: '#FFFFFF',fontSize: 20});
+    this.scoreText = this.game.add.text(this.rightBound+4,100,"Asd",{fill: '#FFFFFF',fontSize: 20});
     
     //Create the shooting callback
     this.game.input.activePointer.leftButton.onDown.add(this.mouseDown,this);
   }
   update() {
 
-    this.scoreText.setText('Distance Traveled:' + '\n' +  Math.floor(this.bubbleGrid.body.y-this.game.world.height));
+    this.scoreText.setText('Distance' + '\n' +  Math.floor(this.bubbleGrid.body.y-this.game.world.height));
     
     //Move with A and D.
     //Shoot with left mouse button.
@@ -113,15 +114,15 @@ export default class extends Phaser.State {
   }
 
   render () {
-    if (__DEV__) {
+    
       //DEBUG LINES
-      this.game.debug.geom(this.leftLine, "#FFFFFF");
+      //this.game.debug.geom(this.leftLine, "#FFFFFF");
       //this.game.debug.geom(this.bottomLine, "#000000");
-      this.game.debug.geom(this.rightLine, "#FFFFFF");
+      //this.game.debug.geom(this.rightLine, "#FFFFFF");
       //this.game.debug.geom(this.centerLine, "#000000");
       //this.game.debug.geom(this.testLine1, "#000000");
       //this.game.debug.geom(this.testLine2, "#000000");
-    }
+    
   }
 
   //Gets called when the bubble that is currently being shot hits one of the bubbles on the grid.

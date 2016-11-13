@@ -19,7 +19,7 @@ export default class extends Phaser.State {
         x:0,
         y:100,
         asset:'bluebubble',
-        text: 'Width(8-16): ',
+        text: 'Width(8-20): ',
         variable: this.game.levelData.width,
         scalar:1,
         lowerBound:8,

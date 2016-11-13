@@ -24,7 +24,7 @@ export default class extends Phaser.State {
     this.load.image('minus', 'assets/images/minus.png');
     this.load.image('plus', 'assets/images/plus.png');
     this.load.image('play', 'assets/images/playButton.png');
-    
+    this.load.image('side', 'assets/images/side.png');
   }
 
   create () {
