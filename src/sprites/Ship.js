@@ -94,10 +94,11 @@ export default class extends Phaser.Sprite {
       this.bubble.body.velocity = shotVelocity;
 
       //this.bubble.scale.setTo(0.5,0.5);
-      this.bubbleImage.loadTexture(this.getBubbleAsset(1));
+      
       this.game.add.existing(this.bubble);
       this.bubble.margin = 4;
       this.bubble.body.setCircle(16-this.bubble.margin);
+      this.loadGun();
       return true;
     }
     return false;
@@ -106,11 +107,16 @@ export default class extends Phaser.Sprite {
   readyGun(){
       if(this.readyToShoot === false){
         this.readyToShoot = true;
-        this.bubbleOrder[0] = this.bubbleOrder[1];
-        this.bubbleOrder[1] = this.getRandomColor();
       }
 
 
+  }
+  loadGun(){
+    for(var i = 0;i<this.bubbleOrder.length-1;i++){
+      this.bubbleOrder[i] = this.bubbleOrder[i+1];
+    }
+    this.bubbleOrder[this.bubbleOrder.length-1] = this.getRandomColor();
+    this.bubbleImage.loadTexture(this.getBubbleAsset(0));
   }
 
   getBubbleAsset(i){
@@ -122,5 +128,6 @@ export default class extends Phaser.Sprite {
   getRandomColor(){
     return this.bubbleColors[Math.floor((Math.random() * this.bubbleColors.length))];
   }
+
 
 }

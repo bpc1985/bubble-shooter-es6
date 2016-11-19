@@ -21,7 +21,7 @@ class Game extends Phaser.Game {
         width: 10,
         shootSpeed: 700,
         shipSpeed: 200,
-        scrollSpeedInitial: 10,
+        scrollSpeedInitial: 20,
         scrollSpeedAcceleration: 0,
         bubbleColors: ['blue', 'red','green','yellow'],
         allBubbleColors: ['blue', 'red','green','yellow','purple'],

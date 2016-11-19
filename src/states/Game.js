@@ -51,13 +51,18 @@ export default class extends Phaser.State {
 
     this.bubbleOrder = new BubbleOrder({
       game: this.game,
-      x:this.rightBound + this.bubbleRadius,
-      y:this.bubbleRadius * 4,
+      //x:this.rightBound + this.bubbleRadius,
+      //y:this.bubbleRadius * 4,
+      //x:this.ship.body.center.x,
+      //y:this.ship.body.center.y-32,
+      x:0,
+      y:0,
       asset:'bubbleorder',
       ship:this.ship
     });
-    this.game.add.existing(this.bubbleOrder);
-
+    //this.game.add.existing(this.bubbleOrder);
+    this.ship.addChild(this.bubbleOrder);
+    
     this.bubbleGrid= new Grid({
       game:this.game,
       x:this.leftBound,
@@ -70,7 +75,7 @@ export default class extends Phaser.State {
       bubbleColors:this.bubbleColors
     });
     this.game.add.existing(this.bubbleGrid);
-
+    
 
     this.score = 0;
     this.scoreText = this.game.add.text(this.rightBound+4,100,"Asd",{fill: '#FFFFFF',fontSize: 20});
