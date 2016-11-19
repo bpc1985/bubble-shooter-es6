@@ -23,7 +23,7 @@ export default class extends Phaser.State {
     this.load.image('background', 'assets/images/bubble_tausta2.png');
     this.load.image('minus', 'assets/images/minus.png');
     this.load.image('plus', 'assets/images/plus.png');
-    this.load.image('play', 'assets/images/playButton.png');
+    this.load.image('play', 'assets/images/playbutton.png');
     this.load.image('side', 'assets/images/side.png');
   }
 

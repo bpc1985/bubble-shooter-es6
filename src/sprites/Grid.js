@@ -247,8 +247,12 @@ export default class extends Phaser.Sprite {
  }
 
  getLowestRow(){
-
-    return this.grid.length-this.gridHeight;
+    if(this.grid.length-this.gridHeight>0){
+        return this.grid.length-this.gridHeight-1;
+    }else{
+        return this.grid.length-this.gridHeight;
+    }
+    
 
 
  }

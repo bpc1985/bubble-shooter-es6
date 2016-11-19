@@ -11,7 +11,9 @@ export default class extends Phaser.State {
   preload () {}
 
   create () {
+    this.game.canvas.oncontextmenu = function (e) { e.preventDefault(); } //Prevenst mouse 2 context menu
     //LEVEL BOUNDARIES
+    
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
     this.bubbleRadius = this.game.levelData.bubbleRadius;
     //DELETEthis.grid = {width: 8, height: 15};
@@ -50,7 +52,7 @@ export default class extends Phaser.State {
     this.bubbleOrder = new BubbleOrder({
       game: this.game,
       x:this.rightBound + this.bubbleRadius,
-      y:this.bubbleRadius * 20,
+      y:this.bubbleRadius * 4,
       asset:'bubbleorder',
       ship:this.ship
     });
@@ -111,6 +113,7 @@ export default class extends Phaser.State {
 
   mouseDown(){
      this.ship.shoot();
+     this.bubbleOrder.updateOrder();
   }
 
   render () {
@@ -131,7 +134,7 @@ export default class extends Phaser.State {
       var newBubble = this.bubbleGrid.snapToGrid(activeBubble,gridBubble);
       this.bubbleGrid.onHit(newBubble);
       this.ship.readyGun();
-      //this.bubbleOrder.updateOrder();
+      
     }
   }
 
