@@ -34,6 +34,8 @@ export default class extends Phaser.Sprite {
         gridPosition:{i:0,j:0}
       });
     this.game.add.existing(this.bubbleImage);
+    //this.bubbleImage.visible = false;
+    this.updateShipColor();
     
   }
 
@@ -117,6 +119,7 @@ export default class extends Phaser.Sprite {
     }
     this.bubbleOrder[this.bubbleOrder.length-1] = this.getRandomColor();
     this.bubbleImage.loadTexture(this.getBubbleAsset(0));
+    this.updateShipColor();
   }
 
   getBubbleAsset(i){
@@ -127,6 +130,12 @@ export default class extends Phaser.Sprite {
   }
   getRandomColor(){
     return this.bubbleColors[Math.floor((Math.random() * this.bubbleColors.length))];
+  }
+  getShipAsset(i){
+    return this.bubbleOrder[i] + 'ship';
+  }
+  updateShipColor(){
+    this.loadTexture(this.getShipAsset(0));
   }
 
 

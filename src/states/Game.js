@@ -49,19 +49,19 @@ export default class extends Phaser.State {
 
     this.bubblesOnGrid = [];
 
-    this.bubbleOrder = new BubbleOrder({
-      game: this.game,
-      //x:this.rightBound + this.bubbleRadius,
-      //y:this.bubbleRadius * 4,
-      //x:this.ship.body.center.x,
-      //y:this.ship.body.center.y-32,
-      x:0,
-      y:0,
-      asset:'bubbleorder',
-      ship:this.ship
-    });
-    //this.game.add.existing(this.bubbleOrder);
-    this.ship.addChild(this.bubbleOrder);
+    //this.bubbleOrder = new BubbleOrder({
+    //  game: this.game,
+    //  //x:this.rightBound + this.bubbleRadius,
+    //  //y:this.bubbleRadius * 4,
+    //  //x:this.ship.body.center.x,
+    //  //y:this.ship.body.center.y-32,
+    //  x:0,
+    //  y:0,
+    //  asset:'bubbleorder',
+    //  ship:this.ship
+    //});
+    ////this.game.add.existing(this.bubbleOrder);
+    //this.ship.addChild(this.bubbleOrder);
     
     this.bubbleGrid= new Grid({
       game:this.game,
@@ -118,7 +118,7 @@ export default class extends Phaser.State {
 
   mouseDown(){
      this.ship.shoot();
-     this.bubbleOrder.updateOrder();
+     //this.bubbleOrder.updateOrder();
   }
 
   render () {
