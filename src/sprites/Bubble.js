@@ -17,6 +17,7 @@ export default class extends Phaser.Sprite {
     this.color = color;
     this.gridPosition = gridPosition;
     this.checked = false;
+    this.killCheck = false;
   }
 
   update () {
@@ -31,6 +32,18 @@ export default class extends Phaser.Sprite {
       this.kill();
     }
 }
+  popIn(){
+    this.killCheck = true;
+    this.tween = this.game.add.tween(this.scale).to( { x: 0, y: 0 }, 70, Phaser.Easing.Linear.None, true);
+    this.tween.onComplete.add(this.kill,this);
+  }
+
+  getStatus(){
+    if(this.checked === false && this.killCheck === false){//this.alive && 
+      return true;
+    }
+    else return false;
+  }
 
 
 }

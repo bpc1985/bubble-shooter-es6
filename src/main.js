@@ -18,12 +18,12 @@ class Game extends Phaser.Game {
     super(width, height, Phaser.AUTO, 'content', null);
     this.levelData = {
         bubbleRadius: 32, //Bubble radius actually means bubble diameter but it is referenced everywhere as the radius.
-        width: 10,
+        width: 15,
         shootSpeed: 700,
-        shipSpeed: 200,
-        scrollSpeedInitial: 20,
+        shipSpeed: 300,
+        scrollSpeedInitial: 15,
         scrollSpeedAcceleration: 0,
-        bubbleColors: ['blue', 'red','green','yellow'],
+        bubbleColors: ['blue', 'red','green'],
         allBubbleColors: ['blue', 'red','green','yellow','purple'],
         bubbleStartingHeight: 10 //The higher the number the higher the bubbles will start.Measured in tiles rather than raw pixels. MAX: Floor(this.game.world.height/bubbleRadius)
 

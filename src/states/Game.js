@@ -37,8 +37,9 @@ export default class extends Phaser.State {
     //The ship's left and the right boundary are set bubbleRadius/2 inwards to avoid shooting bubbles into the walls
     this.ship = new Ship({
       game: this.game,
-      x: this.centerBound,
-      y: this.game.world.height - this.bubbleRadius,
+      x: this.centerBound-this.bubbleRadius,
+      //y: this.game.world.height - this.bubbleRadius,
+      y:this.game.world.height,
       asset: 'ship',
       rightBound:this.rightBound,
       leftBound:this.leftBound,

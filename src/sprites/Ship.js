@@ -24,8 +24,10 @@ export default class extends Phaser.Sprite {
 
     this.bubbleImage = new Bubble({
         game: this.game,
-        x :this.body.center.x-this.bubbleRadius,
-        y: this.body.center.y-this.height*1.2,
+        //x :this.body.center.x-this.bubbleRadius,
+        //y: this.body.center.y-this.height*1.2,
+        x:0,
+        y:-2.5*this.height/4,
         asset: this.getBubbleAsset(0),
         rightBound: this.rightBound,
         leftBound: this.leftBound,
@@ -33,9 +35,13 @@ export default class extends Phaser.Sprite {
         color:this.getBubbleColor(0),
         gridPosition:{i:0,j:0}
       });
-    this.game.add.existing(this.bubbleImage);
+    //this.game.add.existing(this.bubbleImage);
+    this.bubbleImage.scale.setTo(0.5,0.5);
+    this.addChild(this.bubbleImage);
     //this.bubbleImage.visible = false;
     this.updateShipColor();
+    //this.scale.setTo(0.1,0.1);
+    this.tween = this.game.add.tween(this.body.position).to( { x: this.body.x, y: this.game.world.height - this.height }, 300, Phaser.Easing.Sinusoidal.In, true);//{ x: 1, y: 1 }
     
   }
 
@@ -52,7 +58,7 @@ export default class extends Phaser.Sprite {
       }else{
         this.body.velocity.x = 0;
         this.body.x = this.leftBound;
-        this.bubbleImage.body.x = this.leftBound + this.body.width/2 - this.bubbleRadius/2;
+        //this.bubbleImage.body.x = this.leftBound + this.body.width/2 - this.bubbleRadius/2;
       }
     } else if(direction === 'right') {
       if(this.body.right < this.rightBound) {
@@ -60,32 +66,36 @@ export default class extends Phaser.Sprite {
       } else{
         this.body.velocity.x = 0;
         this.body.x=this.rightBound - this.body.width ;
-        this.bubbleImage.body.x = this.rightBound - this.body.width/2- this.bubbleRadius/2;
+        //this.bubbleImage.body.x = this.rightBound - this.body.width/2- this.bubbleRadius/2;
       }
     }
     else {
       this.body.velocity.x = 0;
     }
-    this.bubbleImage.body.velocity.x = this.body.velocity.x;
+    //this.bubbleImage.body.velocity.x = this.body.velocity.x;
 
   }
 
   shoot(){
-    if(this.readyToShoot && this.game.input.activePointer.position.y < this.bubbleImage.body.top){
+    if(this.readyToShoot && this.game.input.activePointer.position.y < this.bubbleImage.body.top){//this.bubbleImage.body.top
       this.readyToShoot = false;
+      var shotX = this.bubbleImage.body.center.x;//this.bubbleImage.body.center.x
+      var shotY = this.bubbleImage.body.center.y;//this.bubbleImage.body.center.y
       //Get the current position of mouse and subtract the current position of the ball, you'll have the direction for the shot.
       //Normalization is needed to ensure that the speed is constant.
       var shotVelocity = new Phaser.Point(0, 0);
       this.game.input.activePointer.position.copyTo(shotVelocity);
-      shotVelocity.subtract(this.bubbleImage.body.center.x,this.bubbleImage.body.center.y);
+      shotVelocity.subtract(shotX,shotY);
       shotVelocity.normalize();
       shotVelocity.setMagnitude(this.bubbleShootingSpeed);
       this.bubble = new Bubble({
         game: this.game,
         //x :this.body.center.x,
         //y: this.body.center.y,
-        x:this.bubbleImage.body.x+this.bubbleRadius/2,
-        y:this.bubbleImage.body.y+this.bubbleRadius/2,
+        //x:this.bubbleImage.body.x+this.bubbleRadius/2,
+        //y:this.bubbleImage.body.y+this.bubbleRadius/2,
+        x:shotX,
+        y:shotY,
         asset: this.getBubbleAsset(0),
         rightBound: this.rightBound,
         leftBound: this.leftBound,
@@ -100,6 +110,9 @@ export default class extends Phaser.Sprite {
       this.game.add.existing(this.bubble);
       this.bubble.margin = 4;
       this.bubble.body.setCircle(16-this.bubble.margin);
+      this.bubble.scale.setTo(0.1,0.1);
+      this.tween = this.game.add.tween(this.bubble.scale).to( { x: 1, y: 1 }, 50, Phaser.Easing.Linear.None, true);
+
       this.loadGun();
       return true;
     }
@@ -135,7 +148,7 @@ export default class extends Phaser.Sprite {
     return this.bubbleOrder[i] + 'ship';
   }
   updateShipColor(){
-    this.loadTexture(this.getShipAsset(0));
+    this.loadTexture(this.getShipAsset(1));
   }
 
 

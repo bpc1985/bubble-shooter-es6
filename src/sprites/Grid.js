@@ -51,6 +51,7 @@ export default class extends Phaser.Sprite {
       //Create a new row when you see start seeing the top one
       //if(this.grid[this.grid.length-2][0].body.bottom>0){
         if(this.body.y-this.newLineStaticDistance-this.newLineCheck>0){
+        this.findUnconnectedGroups();
         this.newLineCheck += this.bubbleRadius;
         var length = this.grid.length;
         var row_length = this.gridWidth;
@@ -134,7 +135,8 @@ export default class extends Phaser.Sprite {
     var group = this.findGroup(startingI,startingJ,true,gridBubbleColor);
     if(group.length >= 3){
         for(var i = 0; i<group.length;i++){
-        group[i].kill();
+        //group[i].kill();
+        group[i].popIn();
         }
         
         this.findUnconnectedGroups();
@@ -165,7 +167,8 @@ export default class extends Phaser.Sprite {
             var workingJ = startJ + this.nearbyPositions[offset][k][0];
             //console.log(workingJ + "," +workingI);
             if(this.onGrid(workingI,workingJ)){
-                if(this.grid[workingJ][workingI]!=null && this.grid[workingJ][workingI].alive && this.grid[workingJ][workingI].checked === false){
+                //if(this.grid[workingJ][workingI]!=null && this.grid[workingJ][workingI].alive && this.grid[workingJ][workingI].checked === false){
+                if(this.grid[workingJ][workingI]!=null && this.grid[workingJ][workingI].getStatus()){
                     if(color ===null){
                         group = group.concat(this.findGroup(workingI,workingJ,false,null));
                     }else if(this.grid[workingJ][workingI].color === color){
@@ -206,7 +209,8 @@ export default class extends Phaser.Sprite {
     for(var j = this.getLowestRow(); j < this.grid.length-1;j++){
          for(var i = 0;i<this.grid[j].length;i++){
             if(this.grid[j][i]!=null && this.grid[j][i].checked === false){
-                this.grid[j][i].kill();
+                //this.grid[j][i].kill();
+                this.grid[j][i].popIn();
             }
          }
      }
