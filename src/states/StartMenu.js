@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import ButtonElement from '../sprites/ButtonElement';
+import ToggleElement from '../sprites/ToggleElement';
 export default class extends Phaser.State {
   init () {}
 
@@ -43,7 +44,7 @@ export default class extends Phaser.State {
     this.scrollSpeedButton = new ButtonElement({
         game: this.game,
         x:0,
-        y:200,
+        y:400,
         asset:'bluebubble',
         text: 'Scroll Speed(0-30): ',
         variable: this.game.levelData.scrollSpeedInitial,
@@ -94,6 +95,46 @@ export default class extends Phaser.State {
     });
     this.game.add.existing(this.shootSpeedButton);
 
+    this.maxSpeedButton = new ButtonElement({
+        game: this.game,
+        x:0,
+        y:450,
+        asset:'bluebubble',
+        text: 'Max scroll speed(0-40): ',
+        variable: this.game.levelData.scrollSpeedTarget,
+        scalar:1,
+        lowerBound:0,
+        upperBound:40
+    });
+    this.game.add.existing(this.maxSpeedButton);
+
+    this.maxTimeButton = new ButtonElement({
+        game: this.game,
+        x:0,
+        y:500,
+        asset:'bluebubble',
+        text: 'Total time to reach max speed in milliseconds (50000-500000): ',
+        variable: this.game.levelData.scrollSpeedTotalTime,
+        scalar:10000,
+        lowerBound:50000,
+        upperBound:500000
+    });
+    this.game.add.existing(this.maxTimeButton);
+
+    this.tweenToggleButton = new ToggleElement({
+        game: this.game,
+        x:0,
+        y:550,
+        asset:'bluebubble',
+        text: 'Disable Bubble Animations (true - false): ',
+        variable: this.game.levelData.disableTween,
+        scalar:1,
+        lowerBound:1,
+        upperBound:1
+    });
+    this.game.add.existing(this.tweenToggleButton);
+
+    
 
   }
 
@@ -104,6 +145,9 @@ export default class extends Phaser.State {
       this.game.levelData.bubbleColors = this.game.levelData.allBubbleColors.slice(0,this.colorCountButton.variable);
       this.game.levelData.bubbleStartingHeight = this.heightButton.variable;
       this.game.levelData.shootSpeed = this.shootSpeedButton.variable;
+      this.game.levelData.scrollSpeedTarget = this.maxSpeedButton.variable;
+      this.game.levelData.scrollSpeedTotalTime = this.maxTimeButton.variable;
+      this.game.levelData.disableTween = this.tweenToggleButton.variable;
       this.state.start('Game');
   }
 

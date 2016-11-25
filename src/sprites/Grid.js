@@ -14,11 +14,14 @@ export default class extends Phaser.Sprite {
     this.bubbleColors = bubbleColors;
     this.grid = [];
     this.gridWidth = width;
-    
+    this.scrollSpeedInitial = this.game.levelData.scrollSpeedInitial;
+    this.scrollSpeedTarget = this.game.levelData.scrollSpeedTarget;
+    this.scrollSpeedTotalTime = this.game.levelData.scrollSpeedTotalTime;
+    this.scrollSpeedCurrent = this.game.levelData.scrollSpeedInitial;
     this.gridHeight = Math.ceil(this.game.world.height/this.bubbleRadius)+2 //+2 So that there the bubble feed seems seamless
     this.collisionGroup = new Phaser.Group(this.game);
     this.makegrid(startingBubbleY);
-    
+    this.speedText = this.game.add.text(this.rightBound+4,200,"Grid Speed" + '\n'+  Math.round(this.getCurrentSpeed()),{fill: '#FFFFFF',fontSize: 20});
     //Nearby bubbles on the grid with j,i coordinates
     //Should be used nearbyPositions[offset] where offset is j%2
     this.nearbyPositions = [];
@@ -51,7 +54,7 @@ export default class extends Phaser.Sprite {
       //Create a new row when you see start seeing the top one
       //if(this.grid[this.grid.length-2][0].body.bottom>0){
         if(this.body.y-this.newLineStaticDistance-this.newLineCheck>0){
-        this.findUnconnectedGroups();
+        //this.findUnconnectedGroups();
         this.newLineCheck += this.bubbleRadius;
         var length = this.grid.length;
         var row_length = this.gridWidth;
@@ -66,6 +69,8 @@ export default class extends Phaser.Sprite {
 
         }
         this.collisionGroup.setAll('body.velocity.y', this.getCurrentSpeed());
+        this.body.velocity.y =this.getCurrentSpeed();
+        this.speedText.setText("Grid Speed"+ '\n' +  Math.round(this.getCurrentSpeed()));
       }
     }
 
@@ -88,10 +93,12 @@ export default class extends Phaser.Sprite {
    }
    this.body.velocity.y =this.getCurrentSpeed(); //Sets the speed of the grid object
    this.collisionGroup.setAll('body.velocity.y', this.getCurrentSpeed());
+   this.tween = this.game.add.tween(this).to( { scrollSpeedCurrent: this.scrollSpeedTarget }, this.scrollSpeedTotalTime, Phaser.Easing.Linear.None, true);
  }
 
  getCurrentSpeed(){
-     return this.game.levelData.scrollSpeedInitial;
+     //return this.game.levelData.scrollSpeedInitial;
+     return this.scrollSpeedCurrent;
  }
 
  addBubbleToGrid(i,j,color){
@@ -246,6 +253,8 @@ export default class extends Phaser.Sprite {
 
      this.addBubbleToGrid(snapPositionI,snapPositionJ,snapBubble.color);
      this.collisionGroup.setAll('body.velocity.y', this.getCurrentSpeed());
+     this.body.velocity.y =this.getCurrentSpeed();
+     this.speedText.setText("Grid Speed"+ '\n' +  Math.round(this.getCurrentSpeed()));
      snapBubble.kill();
      return this.grid[snapPositionJ][snapPositionI];
  }

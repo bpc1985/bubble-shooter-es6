@@ -34,12 +34,18 @@ export default class extends Phaser.Sprite {
 }
   popIn(){
     this.killCheck = true;
-    this.tween = this.game.add.tween(this.scale).to( { x: 0, y: 0 }, 70, Phaser.Easing.Linear.None, true);
-    this.tween.onComplete.add(this.kill,this);
+    if(this.game.levelData.disableTween){
+      this.kill();
+    }else{
+      this.tween = this.game.add.tween(this.scale).to( { x: 0, y: 0 }, 70, Phaser.Easing.Linear.None, true);
+      this.tween.onComplete.add(this.kill,this);
+    }
+    
+    
   }
 
   getStatus(){
-    if(this.checked === false && this.killCheck === false){//this.alive && 
+    if(this.checked === false && this.alive && this.killCheck === false){// && 
       return true;
     }
     else return false;

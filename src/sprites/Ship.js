@@ -19,7 +19,7 @@ export default class extends Phaser.Sprite {
     //Available bubble colors
     this.bubbleColors = bubbleColors;
     //Shooting order and ready to shoot
-    this.bubbleOrder = [this.getRandomColor(),this.getRandomColor()];
+    this.bubbleOrder = [this.getRandomColor(this.bubbleColors),this.getRandomColor(this.bubbleColors)];
     this.readyToShoot = true;
 
     this.bubbleImage = new Bubble({
@@ -130,7 +130,7 @@ export default class extends Phaser.Sprite {
     for(var i = 0;i<this.bubbleOrder.length-1;i++){
       this.bubbleOrder[i] = this.bubbleOrder[i+1];
     }
-    this.bubbleOrder[this.bubbleOrder.length-1] = this.getRandomColor();
+    this.bubbleOrder[this.bubbleOrder.length-1] = this.getRandomColor(this.bubbleColors);
     this.bubbleImage.loadTexture(this.getBubbleAsset(0));
     this.updateShipColor();
   }
@@ -141,14 +141,37 @@ export default class extends Phaser.Sprite {
   getBubbleColor(i){
     return this.bubbleOrder[i];
   }
-  getRandomColor(){
-    return this.bubbleColors[Math.floor((Math.random() * this.bubbleColors.length))];
+  getRandomColor(colors){
+    return colors[Math.floor((Math.random() * colors.length))];
   }
   getShipAsset(i){
     return this.bubbleOrder[i] + 'ship';
   }
   updateShipColor(){
     this.loadTexture(this.getShipAsset(1));
+  }
+  switchColor(){
+    if(this.bubbleOrder[0] != this.bubbleOrder[1]){
+      var temp = this.bubbleOrder[0];
+      this.bubbleOrder[0] = this.bubbleOrder[1];
+      this.bubbleOrder[1] = temp;
+      this.bubbleImage.loadTexture(this.getBubbleAsset(0));
+      this.updateShipColor();
+    }else{
+      var commonColor = this.bubbleOrder[0];
+      var possibleColors = [];
+      var index = -1;
+      for (var i = 0;i<this.bubbleColors.length;i++){
+        if(this.bubbleColors[i] != commonColor){
+          possibleColors[possibleColors.length] = this.bubbleColors[i];
+        }
+      }
+      console.log(possibleColors.length);
+      this.bubbleOrder[0] = this.getRandomColor(possibleColors);
+      this.bubbleImage.loadTexture(this.getBubbleAsset(0));
+
+    }
+    
   }
 
 

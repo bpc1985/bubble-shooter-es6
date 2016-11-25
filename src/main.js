@@ -21,11 +21,14 @@ class Game extends Phaser.Game {
         width: 15,
         shootSpeed: 700,
         shipSpeed: 300,
-        scrollSpeedInitial: 15,
+        scrollSpeedInitial: 10,
+        scrollSpeedTarget: 30,
+        scrollSpeedTotalTime: 100000,
         scrollSpeedAcceleration: 0,
         bubbleColors: ['blue', 'red','green'],
         allBubbleColors: ['blue', 'red','green','yellow','purple'],
-        bubbleStartingHeight: 10 //The higher the number the higher the bubbles will start.Measured in tiles rather than raw pixels. MAX: Floor(this.game.world.height/bubbleRadius)
+        bubbleStartingHeight: 12, //The higher the number the higher the bubbles will start.Measured in tiles rather than raw pixels. MAX: Floor(this.game.world.height/bubbleRadius)
+        disableTween: false
 
     };
     this.state.add('Boot', BootState, false);

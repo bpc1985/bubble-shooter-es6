@@ -80,12 +80,17 @@ export default class extends Phaser.State {
 
     this.score = 0;
     this.scoreText = this.game.add.text(this.rightBound+4,100,"Asd",{fill: '#FFFFFF',fontSize: 20});
+
+    
+   
     
     //Create the shooting callback
     this.game.input.activePointer.leftButton.onDown.add(this.mouseDown,this);
+    this.spacebar = this.game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
+    this.spacebar.onDown.add(this.switchColor,this);
   }
   update() {
-
+    
     this.scoreText.setText('Distance' + '\n' +  Math.floor(this.bubbleGrid.body.y-this.game.world.height));
     
     //Move with A and D.
@@ -149,6 +154,10 @@ export default class extends Phaser.State {
       this.game.input.activePointer.leftButton.onDown.remove(this.mouseDown,this);
       this.state.start('StartMenu');
     
+  }
+
+  switchColor(){
+    this.ship.switchColor();
   }
   
 
