@@ -4,6 +4,7 @@ import Bubble from '../sprites/Bubble';
 import Ship from '../sprites/Ship';
 import BubbleOrder from '../sprites/BubbleOrder';
 import Grid from '../sprites/Grid';
+import Booster from '../sprites/Booster';
 import {setResponsiveWidth} from '../utils';
 
 export default class extends Phaser.State {
@@ -33,7 +34,10 @@ export default class extends Phaser.State {
     this.game.stage.backgroundColor = "#000000"
     //this.background = this.game.add.image(this.leftBound,0,'background');
 
-
+    this.wallHitSound = this.game.add.audio('wallhit',this.game.levelData.volume*0.005);
+    this.bubbleHitSound = this.game.add.audio('bubblehit',this.game.levelData.volume*0.005);
+    this.backgroundMusic = this.game.add.audio('bg1',this.game.levelData.musicVolume*0.05,true);
+    this.shipExplosion = this.game.add.audio('shipexplosion',this.game.levelData.volume*0.005,false);
     //The ship's left and the right boundary are set bubbleRadius/2 inwards to avoid shooting bubbles into the walls
     this.ship = new Ship({
       game: this.game,
@@ -43,7 +47,9 @@ export default class extends Phaser.State {
       asset: 'ship',
       rightBound:this.rightBound,
       leftBound:this.leftBound,
-      bubbleColors: this.bubbleColors
+      bubbleColors: this.bubbleColors,
+      wallHitSound:this.wallHitSound,
+      bubbleHitSound: this.bubbleHitSound
     });
     this.game.add.existing(this.ship);
 
@@ -78,7 +84,7 @@ export default class extends Phaser.State {
     this.game.add.existing(this.bubbleGrid);
     
 
-    this.score = 0;
+    this.score = this.game.levelData.score;
     this.scoreText = this.game.add.text(this.rightBound+4,100,"Asd",{fill: '#FFFFFF',fontSize: 20});
 
     
@@ -88,10 +94,24 @@ export default class extends Phaser.State {
     this.game.input.activePointer.leftButton.onDown.add(this.mouseDown,this);
     this.spacebar = this.game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
     this.spacebar.onDown.add(this.switchColor,this);
+
+    if(this.game.levelData.accelerationToggle === false){
+      this.game.time.events.add(Phaser.Timer.SECOND * this.game.levelData.boosterTime, this.dropBooster, this);
+      //this.booster = new Booster({
+      //  game: this.game,
+      //  x:this.centerBound,
+      //  y:-this.bubbleRadius,
+      //  asset: 'redbubble',
+      //  leftBound: this.leftBound,
+      //  rightBound: this.rightBound
+      //});
+      
+    }
+    this.backgroundMusic.play();
   }
   update() {
     
-    this.scoreText.setText('Distance' + '\n' +  Math.floor(this.bubbleGrid.body.y-this.game.world.height));
+    this.scoreText.setText('Distance' + '\n' +  Math.floor(this.score + this.bubbleGrid.body.y-this.game.world.height));
     
     //Move with A and D.
     //Shoot with left mouse button.
@@ -117,9 +137,18 @@ export default class extends Phaser.State {
       this.ship,
       this.bubbleGrid.collisionGroup,
       this.shipCollision,
-      null,
+      this.shipCollisionCheck,
       this
     );
+    if(this.game.levelData.accelerationToggle === false){
+      this.game.physics.arcade.overlap(
+        this.ship,
+        this.booster,
+        this.boosterCollision,
+        this.shipCollisionCheck,
+        this
+      );
+    }
   }
 
   mouseDown(){
@@ -142,6 +171,9 @@ export default class extends Phaser.State {
   //Gets called when the bubble that is currently being shot hits one of the bubbles on the grid.
   bubbleCollision(activeBubble, gridBubble) {
     if(activeBubble.alive){
+      if(activeBubble.bubbleHitSound != undefined){
+        activeBubble.bubbleHitSound.play();
+      }
       var newBubble = this.bubbleGrid.snapToGrid(activeBubble,gridBubble);
       this.bubbleGrid.onHit(newBubble);
       this.ship.readyGun();
@@ -151,15 +183,55 @@ export default class extends Phaser.State {
 
   //Called when the ship collides with the bubbles on the grid
   shipCollision(ship, gridBubble) {
+      this.shipExplosion.play();
+      this.backgroundMusic.pause();
+      this.backgroundMusic.onFadeComplete.add(this.backgroundMusic.pause,this);
       this.game.input.activePointer.leftButton.onDown.remove(this.mouseDown,this);
       this.state.start('StartMenu');
     
   }
 
+  boosterCollision(ship,booster){
+    booster.popIn();
+    ship.flyAway();
+    var x  = this.ship.body.x-this.ship.width;
+    // 
+    this.shipTween = this.game.add.tween(this.ship.body.position).to( {x: this.centerBound-this.ship.width, y: -this.ship.height }, 500, Phaser.Easing.Linear.None, true);
+    this.game.add.tween(this.ship.scale).to( { x: 1.5, y:1.5 }, 500, Phaser.Easing.Linear.None, true)
+    this.shipTween.onComplete.add(this.levelTransition,this);
+
+
+  }
+  shipCollisionCheck(ship, booster){
+    if(ship.noCollide === true){
+      return false;
+    }else {
+      return true;
+    }
+  }
+
+  levelTransition(){
+      this.game.input.activePointer.leftButton.onDown.remove(this.mouseDown,this);
+      this.game.levelData.score = this.score + this.bubbleGrid.body.y-this.game.world.height;
+      this.game.levelData.scrollSpeedInitial += this.game.levelData.boosterAccelerationModifier;
+      this.state.start('Game');
+  }
+
   switchColor(){
     this.ship.switchColor();
   }
-  
+
+  dropBooster(){
+    this.booster = new Booster({
+        game: this.game,
+        x:this.leftBound+this.bubbleRadius + Math.random()*(this.rightBound-this.leftBound-this.bubbleRadius),
+        y:-this.bubbleRadius,
+        asset: 'purplebubble',
+        leftBound: this.leftBound,
+        rightBound: this.rightBound
+      });
+    this.game.add.existing(this.booster);
+  }  
 
 
 

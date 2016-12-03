@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 
 export default class extends Phaser.Sprite {
 
-  constructor ({ game, x, y, asset, rightBound, leftBound, ship,color,gridPosition}) {
+  constructor ({ game, x, y, asset, rightBound, leftBound, ship,color,gridPosition,bubbleHitSound,wallHitSound}) {
     super(game, x, y, asset);
 
     this.game = game;
@@ -10,6 +10,7 @@ export default class extends Phaser.Sprite {
     this.shot = false;
     this.game.physics.arcade.enable(this);
     this.margin = 0;
+    this.bubbleRadius = this.game.levelData.bubbleRadius;
     this.body.setCircle(this.bubbleRadius/2-this.margin);
     this.rightBound = rightBound;
     this.leftBound = leftBound;
@@ -18,15 +19,24 @@ export default class extends Phaser.Sprite {
     this.gridPosition = gridPosition;
     this.checked = false;
     this.killCheck = false;
+    this.bubbleHitSound = bubbleHitSound;
+    this.wallHitSound = wallHitSound;
+    
   }
 
   update () {
     if(this.body.right+this.margin >= this.rightBound){
       this.body.velocity.x = -this.body.velocity.x;
+      if(this.wallHitSound != undefined){
+        this.wallHitSound.play();
+      }
     }
 
     if(this.body.left-this.margin <= this.leftBound){
       this.body.velocity.x = -this.body.velocity.x;
+      if(this.wallHitSound != undefined){
+        this.wallHitSound.play();
+      }
     }
     if(this.body.top > this.game.world.height){
       this.kill();

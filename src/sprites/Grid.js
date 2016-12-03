@@ -97,8 +97,13 @@ export default class extends Phaser.Sprite {
  }
 
  getCurrentSpeed(){
+     if(this.game.levelData.accelerationToggle){
+        return this.scrollSpeedCurrent;    
+     }else{
+         return this.scrollSpeedInitial;
+     }
      //return this.game.levelData.scrollSpeedInitial;
-     return this.scrollSpeedCurrent;
+     //return this.scrollSpeedCurrent;
  }
 
  addBubbleToGrid(i,j,color){

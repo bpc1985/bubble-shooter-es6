@@ -3,7 +3,7 @@ import Bubble from '../sprites/Bubble';
 
 export default class extends Phaser.Sprite {
 
-  constructor ({ game, x, y, asset, rightBound, leftBound,bubbleColors}) {
+  constructor ({ game, x, y, asset, rightBound, leftBound,bubbleColors,wallHitSound,bubbleHitSound}) {
     super(game, x, y, asset);
 
     this.game = game;
@@ -42,7 +42,10 @@ export default class extends Phaser.Sprite {
     this.updateShipColor();
     //this.scale.setTo(0.1,0.1);
     this.tween = this.game.add.tween(this.body.position).to( { x: this.body.x, y: this.game.world.height - this.height }, 300, Phaser.Easing.Sinusoidal.In, true);//{ x: 1, y: 1 }
-    
+    this.noCollide = false;
+
+    this.wallHitSound = wallHitSound;
+    this.bubbleHitSound = bubbleHitSound;
   }
 
   update () {
@@ -101,7 +104,9 @@ export default class extends Phaser.Sprite {
         leftBound: this.leftBound,
         ship:this,
         color:this.getBubbleColor(0),
-        gridPosition:{i:-1,j:-1}
+        gridPosition:{i:-1,j:-1},
+        wallHitSound :this.wallHitSound,
+        bubbleHitSound: this.bubbleHitSound
       });
       this.bubble.body.velocity = shotVelocity;
 
@@ -172,6 +177,11 @@ export default class extends Phaser.Sprite {
 
     }
     
+  }
+
+  flyAway(){
+    this.noCollide = true;
+    this.bringToTop();
   }
 
 

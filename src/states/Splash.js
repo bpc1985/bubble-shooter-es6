@@ -30,6 +30,11 @@ export default class extends Phaser.State {
     this.load.image('plus', 'assets/images/plus.png');
     this.load.image('play', 'assets/images/playbutton.png');
     this.load.image('side', 'assets/images/side.png');
+
+    this.load.audio('wallhit','assets/Bubble_Sounds/Special.wav');
+    this.load.audio('bubblehit','assets/Bubble_Sounds/Hit_bubble2.wav');
+    this.load.audio('bg1','assets/Bubble_Sounds/zyklus_improv.mp3');
+    this.load.audio('shipexplosion','assets/Bubble_Sounds/Explosion.wav');
   }
 
   create () {
