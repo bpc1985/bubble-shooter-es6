@@ -34,7 +34,7 @@ class Game extends Phaser.Game {
         boosterSpeed: 200,
         boosterAccelerationModifier: 2,
         boosterTime:1,
-        volume:1,
+        volume:0.05,
         musicVolume:1
 
     };

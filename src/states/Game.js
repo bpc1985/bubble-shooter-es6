@@ -34,10 +34,10 @@ export default class extends Phaser.State {
     this.game.stage.backgroundColor = "#000000"
     //this.background = this.game.add.image(this.leftBound,0,'background');
 
-    this.wallHitSound = this.game.add.audio('wallhit',this.game.levelData.volume*0.005);
-    this.bubbleHitSound = this.game.add.audio('bubblehit',this.game.levelData.volume*0.005);
-    this.backgroundMusic = this.game.add.audio('bg1',this.game.levelData.musicVolume*0.05,true);
-    this.shipExplosion = this.game.add.audio('shipexplosion',this.game.levelData.volume*0.005,false);
+    this.wallHitSound = this.game.add.audio('wallhit',this.game.levelData.volume*0.1);
+    this.bubbleHitSound = this.game.add.audio('bubblehit',this.game.levelData.volume*0.1);
+    this.backgroundMusic = this.game.add.audio('bg1',this.game.levelData.volume,true);
+    this.shipExplosion = this.game.add.audio('shipexplosion',this.game.levelData.volume*0.1,false);
     //The ship's left and the right boundary are set bubbleRadius/2 inwards to avoid shooting bubbles into the walls
     this.ship = new Ship({
       game: this.game,

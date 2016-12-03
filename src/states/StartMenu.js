@@ -52,7 +52,6 @@ export default class extends Phaser.State {
         lowerBound:0,
         upperBound:30
     });
-    this.game.add.existing(this.scrollSpeedButton);
 
     this.colorCountButton = new ButtonElement({
         game: this.game,
@@ -134,6 +133,21 @@ export default class extends Phaser.State {
     });
     this.game.add.existing(this.tweenToggleButton);
 
+
+    this.volumeButton = new ButtonElement({
+        game: this.game,
+        x:0,
+        y:200,
+        asset:'bluebubble',
+        text: 'Volume(0-1) ',
+        variable: this.game.levelData.volume*100,
+        scalar:5,
+        lowerBound:0,
+        upperBound:100
+    });
+    this.game.add.existing(this.colorCountButton);
+
+
     
 
   }
@@ -148,6 +162,7 @@ export default class extends Phaser.State {
       this.game.levelData.scrollSpeedTarget = this.maxSpeedButton.variable;
       this.game.levelData.scrollSpeedTotalTime = this.maxTimeButton.variable;
       this.game.levelData.disableTween = this.tweenToggleButton.variable;
+      this.game.levelData.volume = this.volumeButton.variable*0.01;
       this.state.start('Game');
   }
 
