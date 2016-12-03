@@ -135,7 +135,8 @@ export default class extends Phaser.Sprite {
     for(var i = 0;i<this.bubbleOrder.length-1;i++){
       this.bubbleOrder[i] = this.bubbleOrder[i+1];
     }
-    this.bubbleOrder[this.bubbleOrder.length-1] = this.getRandomColor(this.bubbleColors);
+    //this.bubbleOrder[this.bubbleOrder.length-1] = this.getRandomColor(this.bubbleColors);
+    this.bubbleOrder[this.bubbleOrder.length-1] = this.getDifferingColor();
     this.bubbleImage.loadTexture(this.getBubbleAsset(0));
     this.updateShipColor();
   }
@@ -147,6 +148,7 @@ export default class extends Phaser.Sprite {
     return this.bubbleOrder[i];
   }
   getRandomColor(colors){
+
     return colors[Math.floor((Math.random() * colors.length))];
   }
   getShipAsset(i){
@@ -171,7 +173,7 @@ export default class extends Phaser.Sprite {
           possibleColors[possibleColors.length] = this.bubbleColors[i];
         }
       }
-      console.log(possibleColors.length);
+      //console.log(possibleColors.length);
       this.bubbleOrder[0] = this.getRandomColor(possibleColors);
       this.bubbleImage.loadTexture(this.getBubbleAsset(0));
 
@@ -184,5 +186,16 @@ export default class extends Phaser.Sprite {
     this.bringToTop();
   }
 
-
+  getDifferingColor(){
+    var commonColor = this.bubbleOrder[0];
+    var possibleColors = [];
+    var index = -1;
+    for (var i = 0;i<this.bubbleColors.length;i++){
+      if(this.bubbleColors[i] != commonColor){
+          possibleColors[possibleColors.length] = this.bubbleColors[i];
+      }
+    }
+    //console.log(possibleColors.length);
+    return this.getRandomColor(possibleColors);
+  }
 }

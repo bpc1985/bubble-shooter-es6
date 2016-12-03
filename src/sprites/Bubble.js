@@ -27,14 +27,14 @@ export default class extends Phaser.Sprite {
   update () {
     if(this.body.right+this.margin >= this.rightBound){
       this.body.velocity.x = -this.body.velocity.x;
-      if(this.wallHitSound != undefined){
+      if(this.wallHitSound != undefined && this.alive){
         this.wallHitSound.play();
       }
     }
 
     if(this.body.left-this.margin <= this.leftBound){
       this.body.velocity.x = -this.body.velocity.x;
-      if(this.wallHitSound != undefined){
+      if(this.wallHitSound != undefined&& this.alive){
         this.wallHitSound.play();
       }
     }
