@@ -15,7 +15,7 @@ export default class extends Phaser.Sprite {
     this.minusButton = new Phaser.Button(this.game,this.x+this.width+this.margin,y,'minus', this.decreaseVariable, this);
     this.game.add.existing(this.minusButton); 
     
-    this.textElement = this.game.add.text(this.minusButton.x + this.minusButton.width+ this.margin,y,text + variable,{fill: '#000000',fontSize: 20});
+    this.textElement = this.game.add.text(this.minusButton.x + this.minusButton.width+ this.margin,y,text + variable,{fill: '#000000',fontSize: 24,font:"Small Font Regular"});
 
     this.plusButton = new Phaser.Button(this.game,this.textElement.x+this.textElement.width+this.margin,y,'plus', this.increaseVariable, this);
     this.game.add.existing(this.plusButton);

@@ -89,7 +89,7 @@ export default class extends Phaser.State {
    
     this.score = this.game.levelData.score;  
 
-    this.scoreText = this.game.add.text(this.rightBound+8,140,"Asd",{fill: '#FFFFFF',fontSize: 30});
+    this.scoreText = this.game.add.text(this.rightBound+8,140,"Asd",{fill: '#FFFFFF',fontSize: 30,font:"Small Font Regular"});
 
     
    
