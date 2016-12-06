@@ -21,7 +21,7 @@ export default class extends Phaser.Sprite {
     this.gridHeight = Math.ceil(this.game.world.height/this.bubbleRadius)+2 //+2 So that there the bubble feed seems seamless
     this.collisionGroup = new Phaser.Group(this.game);
     this.makegrid(startingBubbleY);
-    this.speedText = this.game.add.text(this.rightBound+4,200,"Grid Speed" + '\n'+  Math.round(this.getCurrentSpeed()),{fill: '#FFFFFF',fontSize: 20});
+    this.speedText = this.game.add.text(this.rightBound+8,290,+  Math.round(this.getCurrentSpeed()),{fill: '#FFFFFF',fontSize: 30});//"Grid Speed" + '\n'
     //Nearby bubbles on the grid with j,i coordinates
     //Should be used nearbyPositions[offset] where offset is j%2
     this.nearbyPositions = [];
@@ -70,7 +70,7 @@ export default class extends Phaser.Sprite {
         }
         this.collisionGroup.setAll('body.velocity.y', this.getCurrentSpeed());
         this.body.velocity.y =this.getCurrentSpeed();
-        this.speedText.setText("Grid Speed"+ '\n' +  Math.round(this.getCurrentSpeed()));
+        this.speedText.setText(Math.round(this.getCurrentSpeed()));"Grid Speed" + '\n'
       }
     }
 
@@ -259,7 +259,7 @@ export default class extends Phaser.Sprite {
      this.addBubbleToGrid(snapPositionI,snapPositionJ,snapBubble.color);
      this.collisionGroup.setAll('body.velocity.y', this.getCurrentSpeed());
      this.body.velocity.y =this.getCurrentSpeed();
-     this.speedText.setText("Grid Speed"+ '\n' +  Math.round(this.getCurrentSpeed()));
+     this.speedText.setText(Math.round(this.getCurrentSpeed()));//"Grid Speed" + '\n'
      snapBubble.kill();
      return this.grid[snapPositionJ][snapPositionI];
  }

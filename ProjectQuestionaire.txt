@@ -1,0 +1,20 @@
+Bubble Rocket
+
+Scratch
+
+2-3h
+
+Only the most important
+
+Right:
+The team provided good feedback after they got their hands on a build of the game.
+
+The scope of the project was good. Not too ambitious nor too easy.
+
+
+
+Wrong:
+The other programmer didn't do anything after he had created the initial project files.
+
+It took a bit too long for the non-programmer part of the team to get their hands on the game.
+

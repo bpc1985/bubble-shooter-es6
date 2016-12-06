@@ -32,8 +32,10 @@ export default class extends Phaser.State {
     //BACKGROUND COLOR AND BUBBLE COLOR
     this.bubbleColors = this.game.levelData.bubbleColors;
     this.game.stage.backgroundColor = "#000000"
-    //this.background = this.game.add.image(this.leftBound,0,'background');
-
+    this.background = this.game.add.image(this.leftBound,0,'background');
+    this.background.scale.setTo((this.rightBound-this.leftBound)/this.background.width,1);
+    this.statImage = this.game.add.image(this.rightBound+4,100,'score');
+    //Sounds
     this.wallHitSound = this.game.add.audio('wallhit',this.game.levelData.volume*0.1);
     this.bubbleHitSound = this.game.add.audio('bubblehit',this.game.levelData.volume*0.1);
     this.backgroundMusic = this.game.add.audio('bg1',this.game.levelData.volume,true);
@@ -84,8 +86,10 @@ export default class extends Phaser.State {
     this.game.add.existing(this.bubbleGrid);
     
 
-    this.score = this.game.levelData.score;
-    this.scoreText = this.game.add.text(this.rightBound+4,100,"Asd",{fill: '#FFFFFF',fontSize: 20});
+   
+    this.score = this.game.levelData.score;  
+
+    this.scoreText = this.game.add.text(this.rightBound+8,140,"Asd",{fill: '#FFFFFF',fontSize: 30});
 
     
    
@@ -108,10 +112,11 @@ export default class extends Phaser.State {
       
     }
     this.backgroundMusic.play();
+    
   }
   update() {
     
-    this.scoreText.setText('Distance' + '\n' +  Math.floor(this.score + this.bubbleGrid.body.y-this.game.world.height));
+    this.scoreText.setText(Math.floor(this.score + this.bubbleGrid.body.y-this.game.world.height));//'' + '\n'
     
     //Move with A and D.
     //Shoot with left mouse button.
@@ -187,6 +192,8 @@ export default class extends Phaser.State {
       this.backgroundMusic.pause();
       this.backgroundMusic.onFadeComplete.add(this.backgroundMusic.pause,this);
       this.game.input.activePointer.leftButton.onDown.remove(this.mouseDown,this);
+
+
       this.state.start('StartMenu');
     
   }

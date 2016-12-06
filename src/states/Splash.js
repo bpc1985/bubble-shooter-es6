@@ -25,7 +25,8 @@ export default class extends Phaser.State {
     this.load.image('greenship', 'assets/images/bubble_spaceship_green.png');
     this.load.image('purpleship', 'assets/images/bubble_spaceship_purple.png');
     this.load.image('yellowship', 'assets/images/bubble_spaceship_yellow.png');
-    this.load.image('background', 'assets/images/bubble_tausta2.png');
+    this.load.image('background', 'assets/images/bubble_bg.jpeg');
+    this.load.image('score', 'assets/images/distance_speed.jpeg');
     this.load.image('minus', 'assets/images/minus.png');
     this.load.image('plus', 'assets/images/plus.png');
     this.load.image('play', 'assets/images/playbutton.png');
@@ -35,6 +36,7 @@ export default class extends Phaser.State {
     this.load.audio('bubblehit','assets/Bubble_Sounds/Hit_bubble2.wav');
     this.load.audio('bg1','assets/Bubble_Sounds/zyklus_improv.mp3');
     this.load.audio('shipexplosion','assets/Bubble_Sounds/Explosion.wav');
+
   }
 
   create () {

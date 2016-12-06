@@ -9,6 +9,28 @@ export default class extends Phaser.State {
   }
 
   create () {
+     
+       
+        this.game.levelData.width = localStorage.getItem('width') ? parseInt(localStorage.getItem('width')) : 15;
+        this.game.levelData.shootSpeed= localStorage.getItem('shootSpeed') ? parseInt(localStorage.getItem('shootSpeed')) : 700;
+        this.game.levelData.shipSpeed= localStorage.getItem('shipSpeed') ? parseInt(localStorage.getItem('shipSpeed')) : 300;
+        this.game.levelData.scrollSpeedInitial= localStorage.getItem('scrollSpeedInitial') ? parseInt(localStorage.getItem('scrollSpeedInitial')) : 20;
+        this.game.levelData.scrollSpeedTarget= localStorage.getItem('scrollSpeedTarget') ? parseInt(localStorage.getItem('scrollSpeedTarget')) : 30;
+        this.game.levelData.scrollSpeedTotalTime= localStorage.getItem('scrollSpeedTotalTime') ? parseInt(localStorage.getItem('scrollSpeedTotalTime')) : 100000;
+        this.game.levelData.scrollSpeedAcceleration= localStorage.getItem('scrollSpeedAcceleration') ? parseInt(localStorage.getItem('scrollSpeedAcceleration')) : 0;
+        
+        //bubbleColors: ['blue', 'red','green'],
+        //allBubbleColors: ['blue', 'red','green','yellow','purple'],
+        this.game.levelData.bubbleStartingHeight= localStorage.getItem('bubbleStartingHeight') ? localStorage.getItem('bubbleStartingHeight') : 12; //The higher the number the higher the bubbles will start.Measured in tiles rather than raw pixels. MAX: Floor(this.game.world.height/bubbleRadius)
+        this.game.levelData.disableTween= localStorage.getItem('disableTween') ? localStorage.getItem('disableTween') : false,
+        //score: 0,
+        //boosterSpeed: 200,
+        //boosterAccelerationModifier: 2,
+        //boosterTime:1,
+        this.game.levelData.volume=localStorage.getItem('volume') ? localStorage.getItem('volume') : 0.05,
+        //musicVolume:1
+      
+    
     this.game.stage.backgroundColor = "#FFFFFF"
 
     this.startButton = new Phaser.Button(this.game,16,0,'play', this.startGame, this);
@@ -154,6 +176,8 @@ export default class extends Phaser.State {
 
   startGame(){
       this.game.levelData.width = this.widthButton.variable;
+      localStorage.setItem('width',this.widthButton.variable);
+
       this.game.levelData.shipSpeed = this.shipSpeedButton.variable;
       this.game.levelData.scrollSpeedInitial = this.scrollSpeedButton.variable;
       this.game.levelData.bubbleColors = this.game.levelData.allBubbleColors.slice(0,this.colorCountButton.variable);
@@ -163,6 +187,7 @@ export default class extends Phaser.State {
       this.game.levelData.scrollSpeedTotalTime = this.maxTimeButton.variable;
       this.game.levelData.disableTween = this.tweenToggleButton.variable;
       this.game.levelData.volume = this.volumeButton.variable*0.01;
+      localStorage.setItem('volume',this.volumeButton.variable*0.01);
       this.state.start('Game');
   }
 

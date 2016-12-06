@@ -46,6 +46,7 @@ export default class extends Phaser.Sprite {
 
     this.wallHitSound = wallHitSound;
     this.bubbleHitSound = bubbleHitSound;
+
   }
 
   update () {

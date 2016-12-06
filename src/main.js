@@ -16,7 +16,9 @@ class Game extends Phaser.Game {
     let height = 640;
     let width = 800;
     super(width, height, Phaser.AUTO, 'content', null);
-    this.levelData = {
+      
+    
+      this.levelData = {
         bubbleRadius: 32, //Bubble radius actually means bubble diameter but it is referenced everywhere as the radius.
         width: 15,
         shootSpeed: 700,
@@ -37,7 +39,9 @@ class Game extends Phaser.Game {
         volume:0.05,
         musicVolume:1
 
-    };
+      };
+    
+    
     this.state.add('Boot', BootState, false);
     this.state.add('Splash', SplashState, false);
     this.state.add('Game', GameState, false);
