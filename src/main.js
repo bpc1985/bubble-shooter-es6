@@ -6,6 +6,10 @@ import BootState from './states/Boot';
 import SplashState from './states/Splash';
 import GameState from './states/Game';
 import StartMenu from './states/StartMenu';
+import Menu from './states/Menu';
+import Controls from './states/Controls';
+import Mission from './states/Mission';
+import End from './states/End';
 
 class Game extends Phaser.Game {
 
@@ -46,6 +50,10 @@ class Game extends Phaser.Game {
     this.state.add('Splash', SplashState, false);
     this.state.add('Game', GameState, false);
     this.state.add('StartMenu', StartMenu, false);
+    this.state.add('Menu', Menu, false);
+    this.state.add('Controls', Controls, false);
+    this.state.add('Mission', Mission, false);
+    this.state.add('End', End, false);
     this.state.start('Boot');
   }
 }

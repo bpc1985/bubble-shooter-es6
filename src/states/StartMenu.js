@@ -22,17 +22,17 @@ export default class extends Phaser.State {
         //bubbleColors: ['blue', 'red','green'],
         //allBubbleColors: ['blue', 'red','green','yellow','purple'],
         this.game.levelData.bubbleStartingHeight= localStorage.getItem('bubbleStartingHeight') ? localStorage.getItem('bubbleStartingHeight') : 12; //The higher the number the higher the bubbles will start.Measured in tiles rather than raw pixels. MAX: Floor(this.game.world.height/bubbleRadius)
-        this.game.levelData.disableTween= localStorage.getItem('disableTween') ? localStorage.getItem('disableTween') : false,
+        this.game.levelData.disableTween= localStorage.getItem('disableTween') ? localStorage.getItem('disableTween') : false;
         //score: 0,
         //boosterSpeed: 200,
         //boosterAccelerationModifier: 2,
         //boosterTime:1,
-        this.game.levelData.volume=localStorage.getItem('volume') ? localStorage.getItem('volume') : 0.05,
+        this.game.levelData.volume=localStorage.getItem('volume') ? localStorage.getItem('volume') : 0.05;
         //musicVolume:1
       
     
-    this.game.stage.backgroundColor = "#FFFFFF"
-
+    //this.game.stage.backgroundColor = "#FFFFFF"
+    this.game.stage.backgroundColor = "#000000"
     this.startButton = new Phaser.Button(this.game,16,0,'play', this.startGame, this);
     this.game.add.existing(this.startButton);
     

@@ -192,9 +192,9 @@ export default class extends Phaser.State {
       this.backgroundMusic.pause();
       this.backgroundMusic.onFadeComplete.add(this.backgroundMusic.pause,this);
       this.game.input.activePointer.leftButton.onDown.remove(this.mouseDown,this);
+      this.game.levelData.score = Math.round(this.score + this.bubbleGrid.body.y-this.game.world.height);
 
-
-      this.state.start('StartMenu');
+      this.state.start('End');
     
   }
 
