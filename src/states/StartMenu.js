@@ -134,7 +134,7 @@ export default class extends Phaser.State {
         x:0,
         y:500,
         asset:'bluebubble',
-        text: 'Total time to reach max speed in milliseconds (50000-500000): ',
+        text: 'Totall accel. time (50000-500000): ',
         variable: this.game.levelData.scrollSpeedTotalTime,
         scalar:10000,
         lowerBound:50000,

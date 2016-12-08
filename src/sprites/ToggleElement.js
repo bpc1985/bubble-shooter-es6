@@ -13,7 +13,7 @@ export default class extends Phaser.Sprite {
     this.visible =false;
     this.text = text; 
     
-    this.textElement = this.game.add.text(this.x+this.width+this.margin,y,text + variable,{fill: '#000000',fontSize: 20});
+    this.textElement = this.game.add.text(this.x+this.width+this.margin,y,text + variable,{fill: '#000000',fontSize: 24,font:"Small Font Regular"});
 
     this.toggleButton = new Phaser.Button(this.game,this.textElement.x+this.textElement.width+this.margin,y,'plus', this.toggleVariable, this);
     this.game.add.existing(this.toggleButton);
