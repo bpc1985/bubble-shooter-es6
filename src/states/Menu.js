@@ -27,6 +27,12 @@ export default class extends Phaser.State {
       this.startButton.x -= this.startButton.width/2;
       this.game.add.existing(this.startButton);
 
+      this.customButton = new Phaser.Button(this.game,this.game.world.width,this.game.world.height,'play', this.showCustom, this);
+      this.customButton.x -= this.customButton.width;
+      this.customButton.y -= this.customButton.height;
+      
+      this.game.add.existing(this.customButton);
+
       this.volumeButton = new ButtonElement({
         game: this.game,
         x:-64,
@@ -76,8 +82,28 @@ export default class extends Phaser.State {
       this.game.levelData.score = 0;
       this.game.levelData.volume = this.volumeButton.variable*0.01;
       this.game.levelData.bubbleColors = this.game.levelData.allBubbleColors.slice(0,this.colorCountButton.variable);
+      if(this.colorCountButton.variable === 3){
+          this.game.levelData.scrollSpeedInitial = 15;
+          this.game.levelData.scrollSpeedTarget = 30;
+          this.game.levelData.scrollSpeedTotalTime = 100000;
+      }else if(this.colorCountButton.variable === 4){
+          this.game.levelData.scrollSpeedInitial = 5;
+          this.game.levelData.scrollSpeedTarget = 15;
+          this.game.levelData.scrollSpeedTotalTime = 100000;
+
+      }else if(this.colorCountButton.variable === 5){
+          this.game.levelData.scrollSpeedInitial = 5;
+          this.game.levelData.scrollSpeedTarget = 6;
+          this.game.levelData.scrollSpeedTotalTime = 100000;
+      }
+
+
       localStorage.setItem('colors',this.colorCountButton.variable);
       localStorage.setItem('volume',this.volumeButton.variable*0.01);
 
+  }
+
+  showCustom(){
+      this.state.start('StartMenu');
   }
 }
