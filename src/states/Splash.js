@@ -27,8 +27,8 @@ export default class extends Phaser.State {
     this.load.image('yellowship', 'assets/images/bubble_spaceship_yellow.png');
     this.load.image('background', 'assets/images/bubble_bg.jpeg');
     this.load.image('score', 'assets/images/distance_speed.jpeg');
-    this.load.image('minus', 'assets/images/minusVolume.png');
-    this.load.image('plus', 'assets/images/plusVolume.png');
+    this.load.image('minus', 'assets/images/minusvolume.png');
+    this.load.image('plus', 'assets/images/plusvolume.png');
     this.load.image('play', 'assets/images/playbutton.png');
     this.load.image('side', 'assets/images/side.png');
     this.load.image('logo', 'assets/images/logo.png');
