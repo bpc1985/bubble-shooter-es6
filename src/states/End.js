@@ -16,7 +16,7 @@ export default class extends Phaser.State {
       this.logo.x-= this.logo.width/2;
       this.highscores = [];
       this.yourIndex = -1;
-      this.fontSize = 30;
+      this.fontSize = 24;
       this.ballCount = this.game.levelData.bubbleColors.length;
       this.scoreText = this.game.add.text(this.game.world.width/2,this.logo.height,"You traveled: " + this.game.levelData.score + 'km\n' ,{fill: '#FFFFFF',fontSize: this.fontSize,font:"Small Font Regular"});//,backgroundColor:'#FFFFFF'
       this.scoreText.x -= this.scoreText.width/2;
