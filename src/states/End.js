@@ -21,7 +21,7 @@ export default class extends Phaser.State {
       this.scoreText = this.game.add.text(this.game.world.width/2,this.logo.height,"You traveled: " + this.game.levelData.score + 'km\n' ,{fill: '#FFFFFF',fontSize: this.fontSize,font:"Small Font Regular"});//,backgroundColor:'#FFFFFF'
       this.scoreText.x -= this.scoreText.width/2;
       this.addHighScoreText();
-      this.menuButton = new Phaser.Button(this.game,0,this.game.world.height,'play', this.showMenu, this);
+      this.menuButton = new Phaser.Button(this.game,0,this.game.world.height,'menu', this.showMenu, this);
       this.menuButton.y -= this.menuButton.height;
       this.game.add.existing(this.menuButton);
   }

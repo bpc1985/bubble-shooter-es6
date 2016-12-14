@@ -70,7 +70,7 @@ export default class extends Phaser.Sprite {
         }
         this.collisionGroup.setAll('body.velocity.y', this.getCurrentSpeed());
         this.body.velocity.y =this.getCurrentSpeed();
-        this.speedText.setText(Math.round(this.getCurrentSpeed()));"Grid Speed" + '\n'
+        this.speedText.setText('Speed' + '\n' + Math.round(this.getCurrentSpeed())+ ' km/s');//"Grid Speed" + '\n'
       }
     }
 
@@ -259,7 +259,7 @@ export default class extends Phaser.Sprite {
      this.addBubbleToGrid(snapPositionI,snapPositionJ,snapBubble.color);
      this.collisionGroup.setAll('body.velocity.y', this.getCurrentSpeed());
      this.body.velocity.y =this.getCurrentSpeed();
-     this.speedText.setText(Math.round(this.getCurrentSpeed()));//"Grid Speed" + '\n'
+     this.speedText.setText('Speed' + '\n' +Math.round(this.getCurrentSpeed())+ ' km/s');//'Speed' + '\n'
      snapBubble.kill();
      return this.grid[snapPositionJ][snapPositionI];
  }

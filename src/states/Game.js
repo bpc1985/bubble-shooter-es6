@@ -34,7 +34,7 @@ export default class extends Phaser.State {
     this.game.stage.backgroundColor = "#000000"
     this.background = this.game.add.image(this.leftBound,0,'background');
     this.background.scale.setTo((this.rightBound-this.leftBound)/this.background.width,1);
-    this.statImage = this.game.add.image(this.rightBound+4,100,'score');
+    //this.statImage = this.game.add.image(this.rightBound+4,100,'score');
     //Sounds
     this.wallHitSound = this.game.add.audio('wallhit',this.game.levelData.volume*0.1);
     this.bubbleHitSound = this.game.add.audio('bubblehit',this.game.levelData.volume*0.1);
@@ -97,6 +97,9 @@ export default class extends Phaser.State {
     //Create the shooting callback
     this.game.input.activePointer.leftButton.onDown.add(this.mouseDown,this);
     this.spacebar = this.game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
+    this.esc = this.game.input.keyboard.addKey(Phaser.KeyCode.ESC);
+    this.esc.onDown.add(this.showMenu,this);
+
     this.spacebar.onDown.add(this.switchColor,this);
 
     if(this.game.levelData.accelerationToggle === false){
@@ -116,7 +119,7 @@ export default class extends Phaser.State {
   }
   update() {
     
-    this.scoreText.setText(Math.floor(this.score + this.bubbleGrid.body.y-this.game.world.height));//'' + '\n'
+    this.scoreText.setText('Distance' + '\n'+Math.floor(this.score + this.bubbleGrid.body.y-this.game.world.height)+ ' km');//'' + '\n'
     
     //Move with A and D.
     //Shoot with left mouse button.
@@ -198,6 +201,14 @@ export default class extends Phaser.State {
     
   }
 
+  showMenu(){
+    this.backgroundMusic.pause();
+    this.game.input.activePointer.leftButton.onDown.remove(this.mouseDown,this);
+    this.game.levelData.score = 0;
+
+    this.state.start('Menu');
+
+  }
   boosterCollision(ship,booster){
     booster.popIn();
     ship.flyAway();

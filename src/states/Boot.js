@@ -22,7 +22,7 @@ export default class extends Phaser.State {
       'loading fonts',
       { font: '16px Arial', fill: '#dddddd', align: 'center' }
     );
-
+    this.game.add.text(0,0,"Fix",{fill: '#FFFFFF',fontSize: 30,font:"Small Font Regular"});
     text.anchor.setTo(0.5, 0.5);
     this.load.image('loaderBg', './assets/images/loader-bg.png');
     this.load.image('loaderBar', './assets/images/loader-bar.png');

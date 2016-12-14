@@ -29,12 +29,17 @@ export default class extends Phaser.State {
     this.load.image('score', 'assets/images/distance_speed.jpeg');
     this.load.image('minus', 'assets/images/minusvolume.png');
     this.load.image('plus', 'assets/images/plusvolume.png');
-    this.load.image('play', 'assets/images/playbutton.png');
+    this.load.image('play', 'assets/images/play.png');
     this.load.image('side', 'assets/images/side.png');
     this.load.image('logo', 'assets/images/logo.png');
-    this.load.image('controls', 'assets/images/controls.png');
+    this.load.image('controls', 'assets/images/newcontrols.png');
     this.load.image('mission', 'assets/images/mission.png');
     this.load.image('gameover', 'assets/images/GAMEOVER.png');
+    this.load.image('mission_button', 'assets/images/mission_button.png');
+    this.load.image('controls_button', 'assets/images/controls2.png');
+    this.load.image('backward', 'assets/images/backward.png');
+    this.load.image('menu', 'assets/images/menu.png');
+    
 
     this.load.audio('wallhit','assets/Bubble_Sounds/Special.wav');
     this.load.audio('bubblehit','assets/Bubble_Sounds/Hit_bubble2.wav');
@@ -44,6 +49,7 @@ export default class extends Phaser.State {
   }
 
   create () {
+    this.game.add.text(0,0,"Fix",{fill: '#FFFFFF',fontSize: 30,font:"Small Font Regular"});
     this.state.start('Menu');
   }
 

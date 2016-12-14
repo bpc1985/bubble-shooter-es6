@@ -16,10 +16,10 @@ export default class extends Phaser.State {
       this.logo = this.game.add.image(this.game.world.width/2-this.logoWidth/2,0,'logo');
 
 
-      this.controlsButton = new Phaser.Button(this.game,0,this.logo.height,'play', this.showControls, this);
+      this.controlsButton = new Phaser.Button(this.game,0,this.logo.height,'controls_button', this.showControls, this);
       this.game.add.existing(this.controlsButton);
 
-      this.missionButton = new Phaser.Button(this.game,this.game.world.width,this.logo.height,'play', this.showMission, this);
+      this.missionButton = new Phaser.Button(this.game,this.game.world.width,this.logo.height,'mission_button', this.showMission, this);
       this.missionButton.x -= this.missionButton.width;
       this.game.add.existing(this.missionButton);
 
@@ -27,11 +27,11 @@ export default class extends Phaser.State {
       this.startButton.x -= this.startButton.width/2;
       this.game.add.existing(this.startButton);
 
-      this.customButton = new Phaser.Button(this.game,this.game.world.width,this.game.world.height,'play', this.showCustom, this);
-      this.customButton.x -= this.customButton.width;
-      this.customButton.y -= this.customButton.height;
-      
-      this.game.add.existing(this.customButton);
+      //this.customButton = new Phaser.Button(this.game,this.game.world.width,this.game.world.height,'play', this.showCustom, this);
+      //this.customButton.x -= this.customButton.width;
+      //this.customButton.y -= this.customButton.height;
+      //
+      //this.game.add.existing(this.customButton);
 
       this.volumeButton = new ButtonElement({
         game: this.game,
@@ -92,6 +92,8 @@ export default class extends Phaser.State {
           this.game.levelData.scrollSpeedTotalTime = 100000;
 
       }else if(this.colorCountButton.variable === 5){
+          this.game.levelData.width = 10;
+          
           this.game.levelData.scrollSpeedInitial = 5;
           this.game.levelData.scrollSpeedTarget = 6;
           this.game.levelData.scrollSpeedTotalTime = 100000;
