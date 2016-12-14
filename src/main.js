@@ -14,11 +14,11 @@ import End from './states/End';
 class Game extends Phaser.Game {
 
   constructor () {
-    //let width = document.documentElement.clientWidth > 768 ? 768 : document.documentElement.clientWidth;
+    let width = document.documentElement.clientWidth > 800 ? 800 : document.documentElement.clientWidth;
     let height = document.documentElement.clientHeight > 640 ? 640 : document.documentElement.clientHeight;
     
     //let height = 640;
-    let width = 800;
+    //let width = 800;
     super(width, height, Phaser.AUTO, 'content', null);
       
     
